@@ -1,4 +1,4 @@
-﻿// ######################################################################
+// ######################################################################
 // UNIVERSIDADE FEDERAL DE CATALÃO (UFCat)
 // DEPARTAMENTO DE ENGENHARIA CIVIL & DEPARTAMENTO DE CIÊNCIAS DA COMPUTAÇÃO
 // Autores
@@ -6,12 +6,15 @@
 // Roberto Viegas Dutra
 // Colaboradores
 // Luiz Eduardo Costa Mota Leite
+// Newton Peixoto
 // Pedro Henrique dos Santos Marques Vieira
+// Luanna Lopes Lobato
+// Marcos Napoleão Rabelo 
 // Wanderlei Malaquias Pereira Junior
 // ######################################################################
 
 // Nome:    Dimensionamento de seções retangulares à flexão pura
-// Versão:  FLEXAOPURACONCRETOARMADO_v00_main
+// Versão:  FLEXAOPURACONCRETOARMADO01_v00_principal
 // Notas:
 // 01-01-19 - A. L. G. Martins and R. V. Dutra finalizaram a versão beta
 // 01-01-20 - Prof. W. M. Pereira Junior and L. E. C. Mota Leite introduziram as verificações de erros e avisos
@@ -80,8 +83,6 @@
 // astot         - Área de aço total na seção                         (cm2)
 // aspele        - Armadura de pele da seção                          (cm2)
 //
-//
-//
 // Vetores:
 //
 //
@@ -119,24 +120,28 @@ $md         = 63;
 
 // Step 1.2: Verificação de erros na fase STEP 1
 if ($fck > 90){
-$error = 1;
-function FLEXAOPURACONCRETOARMADO02_v00_erros($error)
+$erro = 1;
+function FLEXAOPURACONCRETOARMADO01_v00_erros($erro)
 }
-if ($cob * 10 > 55){
-$error = 2;
-function FLEXAOPURACONCRETOARMADO02_v00_erros($error)
+if ($cob > 5.5){
+$erro = 2;
+function FLEXAOPURACONCRETOARMADO01_v00_erros($erro)
 }
 if ($phiestribo > 16){
-$error = 3;
-function FFLEXAOPURACONCRETOARMADO02_v00_erros($error)
+$erro = 3;
+function FFLEXAOPURACONCRETOARMADO01_v00_erros($erro)
 }
 if ($fyk > 600){
-$error = 4;
-function FLEXAOPURACONCRETOARMADO02_v00_erros($error)
+$erro = 4;
+function FLEXAOPURACONCRETOARMADO01_v00_erros($erro)
 }
 if ($fck > $fyk){
-$error = 5;
-function FLEXAOPURACONCRETOARMADO02_v00_erros($error)
+$erro = 5;
+function FLEXAOPURACONCRETOARMADO01_v00_erros($erro)
+}
+if ($d >= $h){
+$erro = 6;
+function FLEXAOPURACONCRETOARMADO01_v00_erros($erro)
 }
 
 // print setup
@@ -227,8 +232,8 @@ elseif ($kx >= $lim23 && $kx <= $duct){
 elseif ($kx > $duct){
   $dominio = "Domínio 3";
   $armadura = "DUPLA";
-  $warning = 1;
-  function FLEXURECONCRETEBEAMDESIGN03_v00_warning($warning)
+  $aviso = 1;
+  function FLEXAOPURACONCRETOARMADO01_v00_avisos($aviso)
 }
 
 // Step 3.3: Momento fletor mínimo
@@ -251,7 +256,7 @@ else{
   $asmin = $asmin;
 }
 
-// Step 3.5: Área de aço máxima
+// Step 3.5: Verificação da área de aço máxima
 $asmax = $ac * (4/100);
 
 // Step 3.6: Área de aço necessária
@@ -266,6 +271,7 @@ if ($armadura == "SIMPLES"){
     $as1 = $ascalc;
   }
 }
+
 // Step 3.6.2: Condição de armadura dupla
 else{
   $xlim = $duct * $d;
@@ -276,12 +282,12 @@ else{
   $as1 = $mlim / ($zlim * $fyd/10);
   $as2 = $m2 / (($d - $dlinha) * ($fyd/10));
 }
-$astot = $as1 + $as2; //cm²
+$astot = $as1 + $as2; 
 
 // Step 3.6.3: Verificação da armadura máxima da seção
 if ($astot > $asmax){
-  $warning = 2;
-  function FLEXURECONCRETEBEAMDESIGN03_v00_warning($warning) 
+  $aviso = 2;
+  function FLEXAOPURACONCRETOARMADO01_v00_avisos($aviso) 
 }
 
 // Step 3.7: Armadura de pele na seção
