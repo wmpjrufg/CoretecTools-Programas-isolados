@@ -206,8 +206,8 @@ for ($i = 0; $i < $tam50; $i++){
 	// Step 2.9.4: Determinação do ycg da armadura e do dreal
     $ycgarmadura = $numerador / $denominador;
     $dreal       = $h - $ycgarmadura;
-    $ateste = $ycgarmadura - $y1;
-    $testeh = (10/100)*$h;
+    $ateste      = $ycgarmadura - $y1;
+    $testeh      = (10/100)*$h;
 
     // print setup
     echo "Ycg_armadura = $ycgarmadura cm \n";

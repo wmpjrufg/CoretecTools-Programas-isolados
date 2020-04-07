@@ -373,12 +373,11 @@ else {
   $xlim = $duct * $d;
   $zlim = $d - 0.5 * $lambda * $xlim;
   $mlim = $bw * $alfac * ($fcd/10) * $lambda * $xlim * $zlim;
-  $m2 = ($md*100) - $mlim;
- 
-  $as1 = $mlim / ($zlim * $fyd/10);
-  $as2 = $m2 / (($d - $dlinha) * ($fyd/10));
+  $m2   = ($md*100) - $mlim;
+  $as1  = $mlim / ($zlim * $fyd/10);
+  $as2  = $m2 / (($d - $dlinha) * ($fyd/10));
 }
-$astot = $as1 + $as2; 
+$astot  = $as1 + $as2; 
 
 // Step 3.6.3: Verificação da armadura máxima da seção
 if ($astot > $asmax){
