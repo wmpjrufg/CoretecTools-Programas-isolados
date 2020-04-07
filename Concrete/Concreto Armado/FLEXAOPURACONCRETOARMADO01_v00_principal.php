@@ -289,7 +289,7 @@ $lim23   = $epsiloncu / ($epsiloncu + 0.01);
 $lnlim23 = $lim23*$d;
 
 // Step 3.2.3: Determinação do limite entre domínio 3 e 4
-$lim34 = $epsiloncu / ($epsiloncu + $epsilonsyield);
+$lim34   = $epsiloncu / ($epsiloncu + $epsilonsyield);
 $lnlim34 = $lim34*$d;
 
 //  Step 3.2.4: Escolhendo o modelo de dimensionamento (pode ser armadura simples ou dupla)
@@ -303,7 +303,7 @@ if ($kx < $lim23){
   $dominio  = "Domínio 3";
   $armadura = "SIMPLES";
 } elseif ($kx > $duct){
-  $dominio = "Domínio 3";
+  $dominio  = "Domínio 3";
   $armadura = "DUPLA";
   $aviso = 1;
   FLEXAOPURACONCRETOARMADO01_v00_avisos($aviso);

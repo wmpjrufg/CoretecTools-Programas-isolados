@@ -145,7 +145,7 @@ for ($i = 0; $i < $tam50; $i++){
   }
 
   echo "Altura Horizontal (ah) = ", $ah, " cm\n";
-  echo "Altura Vertical (av)   = ", $ah, " cm\n";
+  echo "Altura Vertical (av)   = ", $av, " cm\n";
 
   // Step 2.6: Número máximo de barras por camada
   $bdisp           = $bw - 2 * ($cob + $phiestribo/10);
