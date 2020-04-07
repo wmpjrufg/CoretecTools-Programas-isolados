@@ -1,3 +1,4 @@
+<?php
 // ######################################################################
 // UNIVERSIDADE FEDERAL DE CATALÃO (UFCat)
 // DEPARTAMENTO DE ENGENHARIA CIVIL & DEPARTAMENTO DE CIÊNCIAS DA COMPUTAÇÃO
@@ -9,11 +10,10 @@
 // Newton Peixoto
 // Pedro Henrique dos Santos Marques Vieira
 // Luanna Lopes Lobato
-// Marcos Napoleão Rabelo 
 // Wanderlei Malaquias Pereira Junior
 // ######################################################################
 
-// Nome:    Informa os erros identificados no programa de dimensionamento de seções retangulares à flexão pura
+// Nome:    Informa os erros identificados no programa de dimensionamento de seções retangulares submetidas à flexão pura
 // Versão:  FLEXAOPURACONCRETOARMADO01_v00_erros
 // Notas:
 // 01-01-20 - Prof. W. M. Pereira Junior and L. E. C. Mota Leite introduziram as verificações de erros e avisos
@@ -70,10 +70,19 @@ if       ($erro == 1) {
 } elseif ($erro == 4) {
     echo "Aço com fyk > 600 não são normatizados\n";
 } elseif ($erro == 5) {
-    echo "Verifique o valor do fck introduzido\n";
+    echo "Não é permitida entrada de dados do tipo <=0 \n";
 } elseif ($erro == 6) {
+    echo "Verifique o valor do fck introduzido pos fck indicado maior que fyk\n";
+} elseif ($erro == 7) {
     echo "Valor de deverá respeitar a relação d < h\n";
+} elseif ($erro == 8) {
+    echo "Valor do DMC (Diâmetro Máximo Característico) do agregado está maior que 10 cm\n";
+} elseif ($erro == 9) {
+    echo "A seção não suporta o momento informado nem com o uso de armadura dupla\n";
 }
 
+return;
 
 }
+
+?>
