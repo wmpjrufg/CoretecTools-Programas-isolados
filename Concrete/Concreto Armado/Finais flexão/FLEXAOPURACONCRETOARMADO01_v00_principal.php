@@ -270,15 +270,16 @@ $kmd  = $md * 100 / ($bw * pow ($d, 2)* ($fcd/10));
 $num1 = 2*($md*100/($bw * $alfac * ($fcd/10)));
 $num2 = pow ($d, 2);
 
-// Step 3.1.2: Verificação de erros na fase de dimensionamento
-if ($num1 > $num2){
+// Step 3.1.3: Cálculo do restante dos fatores admensionais e linha neutra
+$kx   = (1 - sqrt (1-(2*$kmd)/$alfac))/$lambda;
+
+// Step 3.1.4: Verificação de erros na fase de dimensionamento
+if (is_nan($kx)){
 $erro = 9;
 FLEXAOPURACONCRETOARMADO01_v00_erros($erro);
 return;
 }
 
-// Step 3.1.3: Cálculo do restante dos fatores admensionais e linha neutra
-$kx   = (1 - sqrt (1-(2*$kmd)/$alfac))/$lambda;
 $kz   = (1-0.5*$lambda*$kx);
 $xx   = ($d-sqrt($num2-$num1))/$lambda;   
 $x    = $kx * $d;
