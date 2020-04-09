@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Encargos TCPO</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+        integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+</head>
+
+<body>
+
+    <section class="aw-layout-content  js-content">
+
+	<br>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label for="exampleFormControlSelect1" class="col-sm-3 col-form-label">Ambulatório 5Gconsi:</label>
+                            <div class="col-sm-3">
+                                <select class="form-control" id="frm_Ambulatorio" onchange="VerificacaoAmbulatorio()">
+                                    <option>Não</option>
+                                    <option>Sim</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-3">
+                                <select class="form-control" id="frm_AmbulatorioUtilizacao">
+                                    <option>Não Utilizado</option>
+                                    <option>Utilizado - Filiado a Sinduscon</option>
+                                    <option>Utilizado - Acordo Sindical</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+					
+					                    <div class="col-md-2">
+                        <div class="form-group row">
+                            <label for="exampleFormControlSelect1" class="col-sm-2 col-form-label">Tipo: </label>
+                            <div class="col-sm-10">
+                                <select class="form-control" id="frm_TipoRegime">
+                                    <option>Mensalista</option>
+                                    <option>Horista</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+					
+					
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label for="exampleFormControlSelect1" class="col-sm-3 col-form-label">Grau de Risco:</label>
+                            <div class="col-sm-3">
+                                <select class="form-control" id="frm_GrauRisco">
+                                    <option>Grave</option>
+                                    <option>Médio</option>
+                                    <option>Leve</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <br>
+                <br>
+                <br>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label for="exampleFormControlSelect1" class="col-sm-6 col-form-label">Horas Mensais:
+                            </label>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="txt_HorasMensais"
+                                    aria-describedby="emailHelp" placeholder="horas">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label for="exampleFormControlSelect1" class="col-sm-6 col-form-label">Tempo Médio de
+                                Permanência: </label>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="txt_TempoPermanencia"
+                                    aria-describedby="emailHelp" placeholder="meses">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label for="exampleFormControlSelect1" class="col-sm-6 col-form-label">Descanso Semanal
+                                Anual: </label>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="txt_DescansoSemanal"
+                                    aria-describedby="emailHelp" placeholder="dias">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label for="exampleFormControlSelect1" class="col-sm-6 col-form-label">Auxílio -
+                                Enfermidade: </label>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="txt_AuxilioEnfermidade"
+                                    aria-describedby="emailHelp" placeholder="%">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label for="exampleFormControlSelect1" class="col-sm-6 col-form-label">Feriados Anuais:
+                            </label>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="txt_FeriadosAnuais"
+                                    aria-describedby="emailHelp" placeholder="dias">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label for="exampleFormControlSelect1" class="col-sm-6 col-form-label">Licenças Paternidades
+                                por ano: </label>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="txt_LicencasPaternidadesAno"
+                                    aria-describedby="emailHelp" placeholder="%">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label for="exampleFormControlSelect1" class="col-sm-6 col-form-label">Afastamento por
+                                Acidente de Trabalho: </label>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="txt_AfastamentoAcidente"
+                                    aria-describedby="emailHelp" placeholder="dias">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label for="exampleFormControlSelect1" class="col-sm-6 col-form-label">Dias chuvoso por ano:
+                            </label>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="txt_DiasChuvosos"
+                                    aria-describedby="emailHelp" placeholder="dias">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label for="exampleFormControlSelect1" class="col-sm-6 col-form-label">Licença Paternidade:
+                            </label>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="txt_LicencasPaternidades"
+                                    aria-describedby="emailHelp" placeholder="dias">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label for="exampleFormControlSelect1" class="col-sm-6 col-form-label">Chuva de tempo
+                                considerável: </label>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="txt_ChuvasConsideraveis"
+                                    aria-describedby="emailHelp" placeholder="%">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label for="exampleFormControlSelect1" class="col-sm-6 col-form-label">Faltas Justificadas
+                                Anuais: </label>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="txt_FaltasJustificadas"
+                                    aria-describedby="emailHelp" placeholder="dias">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label for="exampleFormControlSelect1" class="col-sm-6 col-form-label">Atividades que
+                                necessitam de bom tempo: </label>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="txt_AtividadesBomTempo"
+                                    aria-describedby="emailHelp" placeholder="%">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label for="exampleFormControlSelect1" class="col-sm-6 col-form-label">Imprevistos Anuais:
+                            </label>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="txt_ImprevistosAnuais"
+                                    aria-describedby="emailHelp" placeholder="dias">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <br>
+                <br>
+                <br>
+
+                <div class="container-fluid col-md-12" style="text-align: center">
+                    <div class="form-group">
+                        <button class="btn  btn-primary" onclick="CalculoTCPO()" type="submit" id="calcular">Calcular</button>
+                    </div>
+                </div>
+
+            </form>
+
+        </div>
+
+        <script type="text/javascript">
+
+			window.onload = Dados()
+
+			function Dados() {
+				document.getElementById("frm_AmbulatorioUtilizacao").hidden = true;
+				document.getElementById("frm_Ambulatorio").value = "Não";
+				document.getElementById("frm_TipoRegime").value = "Horista";
+				document.getElementById("frm_GrauRisco").value = "Grave";
+				document.getElementById("txt_HorasMensais").value = "220";
+				document.getElementById("txt_TempoPermanencia").value = "9.67";
+				document.getElementById("txt_DescansoSemanal").value = "52";
+				document.getElementById("txt_AuxilioEnfermidade").value = "15";
+				document.getElementById("txt_FeriadosAnuais").value = "13";
+				document.getElementById("txt_LicencasPaternidadesAno").value = "0.1940";
+				document.getElementById("txt_AfastamentoAcidente").value = "0.15";
+				document.getElementById("txt_DiasChuvosos").value = "128";
+				document.getElementById("txt_LicencasPaternidades").value = "5";
+				document.getElementById("txt_ChuvasConsideraveis").value = "0.2";
+				document.getElementById("txt_FaltasJustificadas").value = "3";
+				document.getElementById("txt_AtividadesBomTempo").value = "0.2";
+				document.getElementById("txt_ImprevistosAnuais").value = "6";
+			}
+			
+            function VerificacaoAmbulatorio() {
+                if (document.getElementById("frm_Ambulatorio").value = "Sim") {
+					document.getElementById("frm_AmbulatorioUtilizacao").hidden = false;
+				} else {
+					document.getElementById("frm_AmbulatorioUtilizacao").hidden = true;
+                }
+            }
+		
+			function CalculoTCPO(){
+			
+			/* ######################################################################
+			  UNIVERSIDADE FEDERAL DE CATALÃO - (UFCat)
+			  FACULDADE DE ENGENHARIA - DEPARTAMENTO DE ENGENHARIA CIVIL
+			  Autores:
+			  Gabriel Bernardes de Carvalho
+			  Wanderlei Malaquias Pereira Junior
+			  Colaboradores
+			  Eikson Dutra
+			  Pedro Viera
+			  ######################################################################
+			 
+			  Nome:    Cálculo de BDI - Método Sintético
+			  Versão:  GS01_v00_degrees_of_freedom
+			  Notas:
+			  24-03-2020 - Eng. G. B. Carvalho e Prof. W. M. Pereira Junior formataram a versão final
+
+			  <<<<<>>>>>
+
+			  <<<<<>>>>> Descrição do programa:
+			 
+			  O script abaixo calcula os encargos sociais com o método do banco de dados TCPO.
+			 
+			  <<<<<>>>>>
+
+			  <<<<<>>>>> Descrição das variáveis
+			 
+			  Escalares
+			  
+			  Dados pelo usuário:
+			  Ambulatorio, AmbulatorioUtilizacao, TipoRegime, GrauRisco, HorasMensais, TempoPermanencia, DescansoSemanal, AuxilioEnfermidade, FeriadosAnuais, LicencasPaternidadesAno, AfastamentoAcidente, DiasChuvosos, LicencasPaternidades, ChuvasConsideraveis, FaltasJustificadas, AtividadesBomTempo, ImprevistosAnuais
+			  
+			  Fixas ou auxiliares:
+			  INSS, SECONSI, JornadaProdutivaTeste, EncargoRepousoSemanal, EncargoAuxilioEnfermidade, EncargoLicencaPaternidade, Encargo13, EncargoImprevistos, EncargoInjusta, EncargoFerias, EncargoAvisoPrevio, EncargosTipoB, EncargosTipoC, EncargosTipoD, Previdencia, FGTS, SalarioEducacao, SESI, SENAI, SEBRAE, INCRA, JornadaHorariaDia, JornadaTotal, JornadaDescansoSemanal, JornadaFeriados, JornadaEnfermidade, JornadaPaternidade, JornadaFaltas, JornadaImprevistos, EstatisticoChuvas, JornadaProdutiva, JornadaChuvosos, ReincidenciaEncargosBasicos, ReincidenciaAvisoPrevio, EncargosTotais, result
+			 
+			  <<<<<>>>>> */
+			
+			/*=========================================================================
+			  Passo 1: Declaração e atribuição de variáveis
+			 =========================================================================*/
+				var
+					Ambulatorio, AmbulatorioUtilizacao, TipoRegime, GrauRisco, HorasMensais, TempoPermanencia, DescansoSemanal, AuxilioEnfermidade, FeriadosAnuais, LicencasPaternidadesAno, AfastamentoAcidente, DiasChuvosos, LicencasPaternidades, ChuvasConsideraveis, FaltasJustificadas, AtividadesBomTempo, ImprevistosAnuais, INSS, SECONSI, JornadaProdutivaTeste, EncargoRepousoSemanal, EncargoAuxilioEnfermidade, EncargoLicencaPaternidade, Encargo13, EncargoImprevistos, EncargoInjusta, EncargoFerias, EncargoAvisoPrevio, EncargosTipoB, EncargosTipoC;
+					
+			// Passo 1.1: Variáveis dados pelo usuário
+				Ambulatorio = document.getElementById("frm_Ambulatorio").value;
+				AmbulatorioUtilizacao = document.getElementById("frm_AmbulatorioUtilizacao").value;
+				TipoRegime = document.getElementById("frm_TipoRegime").value;
+				GrauRisco = document.getElementById("frm_GrauRisco").value;
+				HorasMensais = parseFloat(document.getElementById("txt_HorasMensais").value);
+				TempoPermanencia = parseFloat(document.getElementById("txt_TempoPermanencia").value);
+				DescansoSemanal = parseFloat(document.getElementById("txt_DescansoSemanal").value);
+				AuxilioEnfermidade = parseFloat(document.getElementById("txt_AuxilioEnfermidade").value);
+				FeriadosAnuais = parseFloat(document.getElementById("txt_FeriadosAnuais").value);
+				LicencasPaternidadesAno = parseFloat(document.getElementById("txt_LicencasPaternidadesAno").value);
+				AfastamentoAcidente = parseFloat(document.getElementById("txt_AfastamentoAcidente").value);
+				DiasChuvosos = parseFloat(document.getElementById("txt_DiasChuvosos").value);
+				LicencasPaternidades = parseFloat(document.getElementById("txt_LicencasPaternidades").value);
+				ChuvasConsideraveis = parseFloat(document.getElementById("txt_ChuvasConsideraveis").value);
+				FaltasJustificadas = parseFloat(document.getElementById("txt_FaltasJustificadas").value);
+				AtividadesBomTempo = parseFloat(document.getElementById("txt_AtividadesBomTempo").value);
+				ImprevistosAnuais = parseFloat(document.getElementById("txt_ImprevistosAnuais").value);
+				
+			/*=========================================================================
+			  Passo 2: Cálculo
+			 =========================================================================*/
+			 // Passo 2.1: Jornadas
+				var JornadaHorariaDia = (HorasMensais / 30);
+				var JornadaTotal = 365 * JornadaHorariaDia;
+				var JornadaDescansoSemanal = DescansoSemanal * JornadaHorariaDia;
+				var JornadaFeriados = FeriadosAnuais * JornadaHorariaDia;
+				var JornadaEnfermidade = JornadaHorariaDia * AuxilioEnfermidade * AfastamentoAcidente;
+				var JornadaPaternidade = JornadaHorariaDia * LicencasPaternidadesAno * LicencasPaternidades;
+				var JornadaFaltas = JornadaHorariaDia * FaltasJustificadas;
+				var JornadaImprevistos = JornadaHorariaDia * ImprevistosAnuais;
+				var EstatisticoChuvas = ChuvasConsideraveis * AtividadesBomTempo * DiasChuvosos;
+				var JornadaProdutiva = JornadaTotal - JornadaDescansoSemanal - JornadaFeriados - JornadaEnfermidade - JornadaPaternidade - JornadaFaltas - JornadaImprevistos
+				var JornadaChuvosos = JornadaHorariaDia * (JornadaProdutiva * EstatisticoChuvas / JornadaTotal);
+				do {
+					JornadaProdutivaTeste = JornadaProdutiva;
+					JornadaProdutiva = JornadaTotal - JornadaDescansoSemanal - JornadaFeriados - JornadaEnfermidade - JornadaPaternidade - JornadaFaltas - JornadaImprevistos - JornadaChuvosos;
+					JornadaChuvosos = JornadaHorariaDia * (JornadaProdutiva * EstatisticoChuvas / JornadaTotal);
+				} while (JornadaProdutivaTeste != JornadaProdutiva);
+				
+			// Passo 2.2: Encargos Tipo A
+				var Previdencia = 0.2;
+				var FGTS = 0.08;
+				var SalarioEducacao = 0.025;
+				var SESI = 0.015;
+				var SENAI = 0.01;
+				var SEBRAE = 0.006;
+				var INCRA = 0.002;
+				if (GrauRisco == "Leve") {
+					INSS = 0.01;
+				} else if (GrauRisco == "Médio") {
+					INSS = 0.02;
+				} else if (GrauRisco == "Grave") {
+					INSS = 0.03;}
+				if (Ambulatorio == "Não" || AmbulatorioUtilizacao == "Não Utilizado") {
+					SECONSI = 0;
+				} else if (AmbulatorioUtilizacao = "Utilizado - Filiado a Sinduscon") {
+					SECONSI = 0.01;
+				} else if (AmbulatorioUtilizacao = "Utilizado - Acordo Sindical") {
+					SECONSI = 0.03;}
+				var EncargosTipoA = (Previdencia + FGTS + SalarioEducacao + SESI + SENAI + SEBRAE + INCRA + INSS + SECONSI);
+				
+			// Passo 2.3: Encargos Tipo B e C
+				if (TipoRegime == "Horista") {
+					EncargoRepousoSemanal = (JornadaDescansoSemanal+JornadaFeriados) / JornadaProdutiva;
+					EncargoAuxilioEnfermidade = JornadaEnfermidade / JornadaProdutiva;
+					EncargoLicencaPaternidade = JornadaPaternidade / JornadaProdutiva;
+					Encargo13 = HorasMensais / JornadaProdutiva;
+					EncargoImprevistos = (JornadaFaltas + JornadaChuvosos + JornadaImprevistos) / JornadaProdutiva;
+					EncargosTipoB = EncargoRepousoSemanal + EncargoAuxilioEnfermidade + EncargoLicencaPaternidade + Encargo13 + EncargoImprevistos;
+					
+					EncargoInjusta = 0.5 * FGTS * (1 + EncargosTipoB);
+					EncargoFerias = (4 * HorasMensais) / (3 * JornadaProdutiva);
+					EncargoAvisoPrevio = (12 * HorasMensais) / (TempoPermanencia * JornadaProdutiva);
+					EncargosTipoC = EncargoInjusta + EncargoFerias + EncargoAvisoPrevio;
+				} else if (TipoRegime == "Mensalista") {
+					EncargoRepousoSemanal = 0;
+					EncargoAuxilioEnfermidade = 0;
+					EncargoLicencaPaternidade = 0;
+					Encargo13 = HorasMensais / JornadaTotal;
+					EncargoImprevistos = 0;
+					EncargosTipoB = EncargoRepousoSemanal + EncargoAuxilioEnfermidade + EncargoLicencaPaternidade + Encargo13 + EncargoImprevistos;
+					
+					EncargoInjusta = 0.5 * FGTS * (1 + EncargosTipoB)
+					EncargoFerias = (4 * HorasMensais) / (3 * JornadaTotal);
+					EncargoAvisoPrevio = (12 * HorasMensais) / (TempoPermanencia * JornadaTotal);
+					EncargosTipoC = EncargoInjusta + EncargoFerias + EncargoAvisoPrevio;
+				}
+				
+			// Passo 2.4: Encargos Tipo D
+				var ReincidenciaEncargosBasicos = (EncargosTipoA * EncargosTipoB);
+				var ReincidenciaAvisoPrevio = EncargoAvisoPrevio * (EncargosTipoA - SECONSI);
+				var EncargosTipoD = ReincidenciaEncargosBasicos + ReincidenciaAvisoPrevio;
+				
+			// Passo 2.5: Somatório e Resultado
+				var EncargosTotais = (EncargosTipoA + EncargosTipoB + EncargosTipoC + EncargosTipoD);
+				EncargosTotais = EncargosTotais * 100;
+				var result = EncargosTotais.toString();
+				alert(result+"%");
+				
+			}
+
+
+        </script>
+
+    </section>
+
+   
+
+    </div>
+
+</body>
+
+</html>

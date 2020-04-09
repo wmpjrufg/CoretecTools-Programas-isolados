@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>ENCARGOS (CBIC)</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+        integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+</head>
+
+<body>
+
+    <section class="aw-layout-content  js-content">
+
+	<br>
+
+        <div class="container-fluid">
+            <form id="cadastro" name="cadastro" method="POST" class="form-vertical  js-form-loading" action=""
+                onsubmit="return validaCampo(); return false;">
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label for="exampleFormControlSelect1" class="col-sm-3 col-form-label">Ambulatório SECONSI:</label>
+                            <div class="col-sm-3">
+                                <select class="form-control" id="frm_Ambulatorio" onchange="VerificacaoAmbulatorio()">
+                                    <option>Não</option>
+                                    <option>Sim</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-3">
+                                <select class="form-control" id="frm_AmbulatorioUtilizacao">
+                                    <option>Não Utilizado</option>
+                                    <option>Utilizado - Filiado a Sinduscon</option>
+                                    <option>Utilizado - Acordo Sindical</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+					
+					<div class="col-md-2">
+                        <div class="form-group row">
+                            <label for="exampleFormControlSelect1" class="col-sm-2 col-form-label">Tipo: </label>
+                            <div class="col-sm-5">
+								<select class="form-control" id="frm_Tipo">
+                                    <option>Feminino</option>
+                                    <option>Masculino</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+					
+					
+					
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label for="exampleFormControlSelect1" class="col-sm-3 col-form-label">Grau de Risco:
+                            </label>
+                            <div class="col-sm-3">
+                                <select class="form-control" id="frm_GrauRisco">
+                                    <option>Grave</option>
+                                    <option>Médio</option>
+                                    <option>Leve</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <br>
+                <br>
+                <br>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label for="exampleFormControlSelect1" class="col-sm-6 col-form-label">Horas por semana:</label>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="txt_HorasSemanais"
+                                    aria-describedby="emailHelp" placeholder="horas">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label for="exampleFormControlSelect1" class="col-sm-6 col-form-label">Homens na empresa: </label>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="txt_Homens" onchange="HomemMulheres()"
+                                    aria-describedby="emailHelp" placeholder="%">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label for="exampleFormControlSelect1" class="col-sm-6 col-form-label">Dias utéis por semana: </label>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="txt_DiasSemana"
+                                    aria-describedby="emailHelp" placeholder="dias">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label for="exampleFormControlSelect1" class="col-sm-6 col-form-label">Mulheres na empresa: </label>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="txt_Mulheres" onchange="MulheresHomens()"
+                                    aria-describedby="emailHelp" placeholder="%">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label for="exampleFormControlSelect1" class="col-sm-6 col-form-label">Feriados Anuais:
+                            </label>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="txt_Feriados"
+                                    aria-describedby="emailHelp" placeholder="dias">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label for="exampleFormControlSelect1" class="col-sm-6 col-form-label">Licenças Paternidades/Maternidade
+                                por ano: </label>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="txt_LicencasPaternas"
+                                    aria-describedby="emailHelp" placeholder="%">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label for="exampleFormControlSelect1" class="col-sm-6 col-form-label">Afastamento por
+                                Acidente de Trabalho: </label>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="txt_AcidenteDias"
+                                    aria-describedby="emailHelp" placeholder="dias">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label for="exampleFormControlSelect1" class="col-sm-6 col-form-label">Acidente de Trabalho:
+                            </label>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="txt_TaxaAcidente"
+                                    aria-describedby="emailHelp" placeholder="%">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label for="exampleFormControlSelect1" class="col-sm-6 col-form-label">Licença Maternidade:
+                            </label>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="txt_LicencaMaternidadeDias"
+                                    aria-describedby="emailHelp" placeholder="dias">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label for="exampleFormControlSelect1" class="col-sm-6 col-form-label">Direito à FGTS: </label>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="txt_TaxaFGTS"
+                                    aria-describedby="emailHelp" placeholder="%">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label for="exampleFormControlSelect1" class="col-sm-6 col-form-label">Licença Paternidade: </label>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="txt_LicencaPaternidadeDias"
+                                    aria-describedby="emailHelp" placeholder="dias">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label for="exampleFormControlSelect1" class="col-sm-6 col-form-label">Trabalhadores Noturnos: </label>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="txt_TaxaNoturnos"
+                                    aria-describedby="emailHelp" placeholder="%">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label for="exampleFormControlSelect1" class="col-sm-6 col-form-label">Aviso prévio trabalho:
+                            </label>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="txt_TaxaPrevioTrab" onchange="PrevioTrabalhado()"
+                                    aria-describedby="emailHelp" placeholder="%">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label for="exampleFormControlSelect1" class="col-sm-6 col-form-label">Aviso prévio indenizado: </label>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="txt_TaxaPrevioInd" onchange="PrevioIndenizado()"
+                                    aria-describedby="emailHelp" placeholder="%">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label for="exampleFormControlSelect1" class="col-sm-6 col-form-label">Horas adicionais - Trabalhadores Noturnos:
+                            </label>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="txt_HorasNoturno"
+                                    aria-describedby="emailHelp" placeholder="horas">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label for="exampleFormControlSelect1" class="col-sm-6 col-form-label">Tempo médio de permanência na empresa: </label>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="txt_Permanencia"
+                                    aria-describedby="emailHelp" placeholder="meses">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label for="exampleFormControlSelect1" class="col-sm-6 col-form-label">Faltas justificadas anuais:
+                            </label>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="txt_Faltas"
+                                    aria-describedby="emailHelp" placeholder="dias">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+				
+                <br>
+                <br>
+                <br>
+
+                <div class="container-fluid col-md-12" style="text-align: center">
+                    <div class="form-group">
+                        <button class="btn  btn-primary" type="submit" id="calcular" onClick="CalculoCBIC()">Calcular</button>
+                    </div>
+                </div>
+
+            </form>
+
+        </div>
+
+        <script type="text/javascript">
+
+			window.onload = Dados()
+
+			function Dados() {
+				document.getElementById("frm_AmbulatorioUtilizacao").hidden = true;
+				document.getElementById("frm_Ambulatorio").value = "Não";
+				document.getElementById("frm_Tipo").value = "Masculino";
+				document.getElementById("frm_GrauRisco").value = "Grave";
+				document.getElementById("txt_HorasSemanais").value = "44";
+				document.getElementById("txt_Homens").value = "0.8914";
+				document.getElementById("txt_DiasSemana").value = "6";
+				document.getElementById("txt_Mulheres").value = "0.1086";
+				document.getElementById("txt_Feriados").value = "11";
+				document.getElementById("txt_LicencasPaternas").value = "0.0272";
+				document.getElementById("txt_AcidenteDias").value = "15";
+				document.getElementById("txt_TaxaAcidente").value = "0.0164";
+				document.getElementById("txt_LicencaMaternidadeDias").value = "120";
+				document.getElementById("txt_TaxaFGTS").value = "0.95";
+				document.getElementById("txt_LicencaPaternidadeDias").value = "5";
+				document.getElementById("txt_TaxaNoturnos").value = "0.0134";
+				document.getElementById("txt_TaxaPrevioTrab").value = "0.2";
+				document.getElementById("txt_TaxaPrevioInd").value = "0.8";
+				document.getElementById("txt_HorasNoturno").value = "2";
+				document.getElementById("txt_Permanencia").value = "5.9";
+				document.getElementById("txt_Faltas").value = "4";
+			}
+			
+            function VerificacaoAmbulatorio() {
+                if (document.getElementById("frm_Ambulatorio").value = "Sim") {
+					document.getElementById("frm_AmbulatorioUtilizacao").hidden = false;
+				} else {
+					document.getElementById("frm_AmbulatorioUtilizacao").hidden = true;
+                }
+            }
+		
+			function HomensMulheres() {
+				document.getElementById("txt_Mulheres").value = 1 - document.getElementById("txt_Homens").value
+			}
+		
+			function MulheresHomens() {
+				document.getElementById("txt_Homens").value = 1 - document.getElementById("txt_Mulheres").value
+			}
+		
+			function PrevioTrabalhado(){
+				document.getElementById("txt_TaxaPrevioInd").value = 1 - document.getElementById("txt_TaxaPrevioTrab").value
+			}
+			
+			function PrevioIndenizado(){
+				document.getElementById("txt_TaxaPrevioTrab").value = 1 - document.getElementById("txt_TaxaPrevioInd").value
+			}
+		
+			function CalculoCBIC(){
+			
+			/* ######################################################################
+			  UNIVERSIDADE FEDERAL DE CATALÃO - (UFCat)
+			  FACULDADE DE ENGENHARIA - DEPARTAMENTO DE ENGENHARIA CIVIL
+			  Autores:
+			  Gabriel Bernardes de Carvalho
+			  Wanderlei Malaquias Pereira Junior
+			  Colaboradores
+			  Eikson Dutra
+			  Pedro Viera
+			  ######################################################################
+			 
+			  Nome:    Cálculo de BDI - Método Sintético
+			  Versão:  GS01_v00_degrees_of_freedom
+			  Notas:
+			  24-03-2020 - Eng. G. B. Carvalho e Prof. W. M. Pereira Junior formataram a versão final
+
+			  <<<<<>>>>>
+
+			  <<<<<>>>>> Descrição do programa:
+			 
+			  O script abaixo calcula os encargos sociais com o método do banco de dados CBIC.
+			 
+			  <<<<<>>>>>
+
+			  <<<<<>>>>> Descrição das variáveis
+			 
+			  Escalares
+			  
+			  Dados pelo usuário:
+			  Ambulatorio, AmbulatorioUtilizacao, Tipo, GrauRisco, HorasSemanais, Homens, DiasSemana, Mulheres, Feriados, LicencasPaternas, AcidenteDias, TaxaAcidente, LicencaMaternidadeDias, TaxaFGTS, LicencaPaternidadeDias, TaxaNoturnos, TaxaPrevioTrab, TaxaPrevioInd, HorasNoturno, Permanencia, Faltas
+			  
+			  Fixas ou auxiliares:
+			  JornadaTotal, EncargoLicencaPat, JornadaDiaria, SemanasMes, HorasMes, JornadaDescansoSemanal, JornadaFerias, JornadaFeriados, JornadaFaltas, JornadaPaternidade, JornadaMaternidade, JornadaAfastamento, Previdencia, FGTS, SalarioEducacao, SESI, SENAI, SEBRAE, INCRA, INSS, SECONSI, EncargosGrupoI, EncargoDescansoSemanal, EncargoFerias, EncargoFerias1b3, EncargoFeriados, AvisoPrevioTrab, EncargoFaltas, EncargoAfastamento, EncargoNoturno, Encargo13, EncargosGrupoII, EncargosGrupoIII, MediaDepositoFGTS, EncargoInjusta, EncargoContribuicaoSocial, EncargosGrupoIV, EncargosGrupoV, EncargosGrupoVI, EncargosTotais, result
+			 
+			  <<<<<>>>>> */
+			
+			/*=========================================================================
+			  Passo 1: Declaração e atribuição de variáveis
+			 =========================================================================*/
+				var
+					Ambulatorio, AmbulatorioUtilizacao, Tipo, GrauRisco, HorasSemanais, Homens, DiasSemana, Mulheres, Feriados, LicencasPaternas, AcidenteDias, TaxaAcidente, LicencaMaternidadeDias, TaxaFGTS, LicencaPaternidadeDias, TaxaNoturnos, TaxaPrevioTrab, TaxaPrevioInd, HorasNoturno, Permanencia, Faltas;
+					
+			// Passo 1.1: Variáveis dados pelo usuário
+				Ambulatorio = document.getElementById("frm_Ambulatorio").value;
+				AmbulatorioUtilizacao = document.getElementById("frm_AmbulatorioUtilizacao").value;
+				Tipo = document.getElementById("frm_Tipo").value;
+				GrauRisco = document.getElementById("frm_GrauRisco").value;
+				HorasSemanais = parseFloat(document.getElementById("txt_HorasSemanais").value);
+				Homens = parseFloat(document.getElementById("txt_Homens").value);
+				DiasSemana = parseFloat(document.getElementById("txt_DiasSemana").value);
+				Mulheres = parseFloat(document.getElementById("txt_Mulheres").value);
+				Feriados = parseFloat(document.getElementById("txt_Feriados").value);
+				LicencasPaternas = parseFloat(document.getElementById("txt_LicencasPaternas").value);
+				AcidenteDias = parseFloat(document.getElementById("txt_AcidenteDias").value);
+				TaxaAcidente = parseFloat(document.getElementById("txt_TaxaAcidente").value);
+				LicencaMaternidadeDias = parseFloat(document.getElementById("txt_LicencaMaternidadeDias").value);
+				TaxaFGTS = parseFloat(document.getElementById("txt_TaxaFGTS").value);
+				LicencaPaternidadeDias = parseFloat(document.getElementById("txt_LicencaPaternidadeDias").value);
+				TaxaNoturnos = parseFloat(document.getElementById("txt_TaxaNoturnos").value);
+				TaxaPrevioTrab = parseFloat(document.getElementById("txt_TaxaPrevioTrab").value);
+				TaxaPrevioInd = parseFloat(document.getElementById("txt_TaxaPrevioInd").value);
+				HorasNoturno = parseFloat(document.getElementById("txt_HorasNoturno").value);
+				Permanencia = parseFloat(document.getElementById("txt_Permanencia").value);
+				Faltas = parseFloat(document.getElementById("txt_Faltas").value);
+				
+				
+			/*=========================================================================
+			  Passo 2: Cálculo
+			 =========================================================================*/
+			 var
+				JornadaTotal, EncargoLicencaPat, INSS, SECONSI;
+				
+			 // Passo 2.1: Jornadas
+				var JornadaDiaria = HorasSemanais/DiasSemana;
+				var SemanasMes = (365 / (12 * 7));
+				var HorasMes = ((SemanasMes * 7) * JornadaDiaria);
+				var JornadaDescansoSemanal = SemanasMes * (12-1) * JornadaDiaria;
+				var JornadaFerias = (365 / 12) * JornadaDiaria;
+				var JornadaFeriados = Feriados * JornadaDiaria;
+				var JornadaFaltas = Faltas * JornadaDiaria;
+				var JornadaPaternidade = Homens * LicencasPaternas * LicencaPaternidadeDias * JornadaDiaria;
+				var JornadaMaternidade = Mulheres * LicencasPaternas * LicencaMaternidadeDias * JornadaDiaria;
+				var JornadaAfastamento = TaxaAcidente * AcidenteDias * JornadaDiaria;
+				if (Tipo = "Masculino"){
+					JornadaTotal = 365 * JornadaDiaria - (JornadaDescansoSemanal + JornadaFerias + JornadaFeriados + JornadaFaltas + JornadaPaternidade + JornadaAfastamento);
+				} else if (Tipo = "Feminino"){
+					JornadaTotal = 365 * JornadaDiaria - (JornadaDescansoSemanal + JornadaFerias + JornadaFeriados + JornadaFaltas + JornadaMaternidade + JornadaAfastamento);
+				}
+				
+			 // Passo 2.2: Encargos Grupo I
+				var Previdencia = 0.2;
+				var FGTS = 0.08;
+				var SalarioEducacao = 0.025;
+				var SESI = 0.015;
+				var SENAI = 0.01;
+				var SEBRAE = 0.006;
+				var INCRA = 0.002;
+				if (GrauRisco == "Leve") {
+					INSS = 0.01;
+				} else if (GrauRisco == "Médio") {
+					INSS = 0.02;
+				} else if (GrauRisco == "Grave") {
+					INSS = 0.03;}
+				if (Ambulatorio == "Não" || AmbulatorioUtilizacao == "Não Utilizado") {
+					SECONSI = 0;
+				} else if (AmbulatorioUtilizacao = "Utilizado - Filiado a Sinduscon") {
+					SECONSI = 0.01;
+				} else if (AmbulatorioUtilizacao = "Utilizado - Acordo Sindical") {
+					SECONSI = 0.03;}
+				var EncargosGrupoI = (Previdencia + FGTS + SalarioEducacao + SESI + SENAI + SEBRAE + INCRA + INSS + SECONSI);
+
+			 // Passo 2.3: Encargos Grupo II
+				var EncargoDescansoSemanal = JornadaDescansoSemanal / JornadaTotal;
+				var EncargoFerias = JornadaFerias / JornadaTotal;
+				var EncargoFerias1b3 = EncargoFerias / 3;
+				var EncargoFeriados = JornadaFeriados / JornadaTotal;
+				var AvisoPrevioTrab = (TaxaFGTS * 7 * JornadaDiaria * TaxaPrevioTrab) / (JornadaTotal * (Permanencia / 12));
+				var EncargoFaltas = JornadaFaltas / JornadaTotal;
+				var EncargoAfastamento = JornadaAfastamento / JornadaTotal;
+				var EncargoNoturno = (HorasMes * (12 + 1) * 0.2 * TaxaNoturnos + (HorasNoturno * SemanasMes * 7 * (12 + 1) * 0.5 * TaxaNoturnos)) / JornadaTotal;
+				if (Tipo = "Masculino"){
+					EncargoLicencaPat = JornadaPaternidade / JornadaTotal;
+				} else if (Tipo = "Feminino"){
+					EncargoLicencaPat = JornadaMaternidade / JornadaTotal;
+				}
+				var Encargo13 = HorasMes / JornadaTotal;
+				var EncargosGrupoII = EncargoDescansoSemanal + EncargoFerias + EncargoFerias1b3 + EncargoFeriados + AvisoPrevioTrab + EncargoFaltas + EncargoAfastamento + EncargoNoturno + EncargoLicencaPat + Encargo13;
+
+			 // Passo 2.4: Encargos Grupo III
+				var EncargosGrupoIII = (TaxaFGTS * HorasMes * TaxaPrevioInd) / (JornadaTotal * (Permanencia / 12));
+			 
+			 // Passo 2.5: Encargos Grupo IV
+				var MediaDepositoFGTS = (0.08 * HorasMes * TaxaFGTS * Permanencia) / (JornadaTotal * (Permanencia / 12));
+				var EncargoInjusta = 0.4 * MediaDepositoFGTS;
+				var EncargoContribuicaoSocial = 0.1 * MediaDepositoFGTS;
+				var EncargosGrupoIV = EncargoInjusta + EncargoContribuicaoSocial;
+
+			 // Passo 2.6: Encargos Grupo V
+				var EncargosGrupoV = EncargosGrupoI * EncargosGrupoII
+
+			 // Passo 2.7: Encargos Grupo VI
+				var EncargosGrupoVI = FGTS * EncargosGrupoIII;
+
+			 // Passo 2.8: Somatório e Resultado
+				var EncargosTotais = EncargosGrupoI + EncargosGrupoII + EncargosGrupoIII + EncargosGrupoIV + EncargosGrupoV + EncargosGrupoVI;
+				EncargosTotais = EncargosTotais * 100;
+				var result = EncargosTotais.toString();
+				alert(result+"%");
+
+			}
+
+        </script>
+
+    </section>
+
+   
+
+    </div>
+
+</body>
+
+</html>
