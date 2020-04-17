@@ -184,6 +184,7 @@ echo "-----------------------------------------------\n";
 echo "PARÂMETROS DE ENTRADA:\n";
 echo "-----------------------------------------------\n";
 echo "fck = $fck MPa\n";
+echo "DMC = $dmax cm\n";
 echo "fyk = $fyk MPa\n";
 echo "bw  = $bw cm\n";
 echo "h   = $h cm\n";
@@ -344,6 +345,9 @@ if ($ro < 0.15){
   $asmin = $asmin;
 }
 
+// Step 3.5: Verificação da área de aço máxima
+$asmax = $ac * (4/100);
+
 echo "-----------------------------------------------\n";
 echo "CRITÉRIOS PARA ARMADURA:\n";
 echo "-----------------------------------------------\n";
@@ -352,17 +356,15 @@ echo "kmdmin               = $kmdmin\n";
 echo "kxmin                = $kz\n";
 echo "kzmin                = $kzmin\n";
 echo "Asmin                = $asmin cm2\n";
+echo "Asmax                = $asmax cm2  \n";
 echo "Taxa mínima de aço   = $ro %\n";
 echo "-----------------------------------------------\n\n";
-
-// Step 3.5: Verificação da área de aço máxima
-$asmax = $ac * (4/100);
 
 // Step 3.6: Área de aço necessária
 // Step 3.6.1: Condição de armadura simples
 if ($armadura == "SIMPLES"){
   $ascalc = ($md*100)/($kz*$d*$fyd/10);
-  $as2 = 0;
+  $as2    = 0;
   if ($ascalc < $asmin){
     $as1 = $asmin;
   } else {
@@ -378,6 +380,8 @@ else {
   $as1  = $mlim / ($zlim * $fyd/10);
   $as2  = $m2 / (($d - $dlinha) * ($fyd/10));
 }
+
+// Step 3.6.3: Área total na seção (seja ela tracionada ou comprimida)
 $astot  = $as1 + $as2; 
 
 // Step 3.6.3: Verificação da armadura máxima da seção
