@@ -12,7 +12,7 @@
 // Nome:    Determinação da perda de tensão por atrito na protensão
 // Versão: PROTENSAO02_v00_perda_de_protensao_por_atrito_nos_cabos
 // Notas:
-// 15-04-20 - C. M. S. Carneiro and W. C. do Valle finalizaram a versão beta 
+// 15-04-20 - C. M. S. Carneiro and W. C. do Valle finalizaram a versão beta
 //
 //
 //
@@ -61,10 +61,10 @@ echo "PROJETO DE PEÇAS PROTENDIDAS - CÁLCULO DA PERDA DE TENSAO POR ATRITO\n";
 echo "-----------------------------------------------\n\n";
 
 // Step 1.1: Definição dos parâmetros de entrada que vêm do Front End
-$Pi           = 1000;   
+$Pi           = 1000;
 $X            = 10;
 $fatoralfa    = 0.17;
-$fatormicro   = 0.50;   
+$fatormicro   = 0.50;
 $fatork       = 0.0033;
 
 // print setup
@@ -112,9 +112,3 @@ echo "Total da perda     = $Perdacarga kN\n";
 echo "Total percentual   = $Perdaperc %\n";
 echo "Carga após a perda = $Piaposperda kN\n";
 echo "-----------------------------------------------\n\n";
-?>
-
-
-
-
-

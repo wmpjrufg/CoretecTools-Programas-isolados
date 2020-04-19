@@ -54,21 +54,18 @@ function CISALHAMENTOCONCRETOARMADO01_v00_avisos($aviso)
 
 //
 //
-//=========================================================================%
-// STEP 1: RETURN EM FUNÇÃO DOS AVISOS DA ROTINA PRINCIPAL
-//=========================================================================%
+    //=========================================================================%
+    // STEP 1: RETURN EM FUNÇÃO DOS AVISOS DA ROTINA PRINCIPAL
+    //=========================================================================%
 //
 //
-// Step 1.1: Verificação de avisos
+    // Step 1.1: Verificação de avisos
 
-if       ($aviso == 1) {
-    echo "A peça não suportará o esforço na biela comprimida pois vd > vrd2. Ocorrerá esmagamento das bielas comprimidas! Para seguir com o dimensionamento, faça alterações nas propriedades da seção e/ou do material \n\n";
-} elseif ($aviso == 2) {
-    echo "Vc <=0 portanto será adotada armadura mínima na peça \n\n";
+    if ($aviso == 1) {
+        echo "A peça não suportará o esforço na biela comprimida pois vd > vrd2. Ocorrerá esmagamento das bielas comprimidas! Para seguir com o dimensionamento, faça alterações nas propriedades da seção e/ou do material \n\n";
+    } elseif ($aviso == 2) {
+        echo "Vc <=0 portanto será adotada armadura mínima na peça \n\n";
+    }
+
+    return;
 }
-
-return;
-
-}
-
-?>

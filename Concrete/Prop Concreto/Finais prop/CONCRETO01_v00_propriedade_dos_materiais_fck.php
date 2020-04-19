@@ -31,7 +31,7 @@
 //
 //Escalares:
 //fck           - Resistência característica à compressão do concreto (MPa)
-//Classeconcreto- Resistência característica à compressão do concreto (MPa) 
+//Classeconcreto- Resistência característica à compressão do concreto (MPa)
 //fctm        - Resistência característica à tração média do concreto (MPa)
 //fctkinf  - Resistência característica à tração inferior do concreto (MPa)
 //fctksup  - Resistência característica à tração superior do concreto (MPa)
@@ -50,7 +50,7 @@
 //Ap                                  - Área da armadura de protensão (cm2)
 //Pa                                     - Força de protensão ancorada (kN)
 //gpp                                         - Peso próprio da viga (kN/cm)
-//l                                                       - Vão da viga (cm) 
+//l                                                       - Vão da viga (cm)
 //Mpp                 - Momento fletor máximo devido ao peso próprio (kNcm)
 //Po  - Força de protensão após transferência de protensão para a peça (kN)
 //Ach                                    - área da seção homogenizada (cm2)
@@ -78,18 +78,16 @@ echo "CONCRETO - DETERMINAÇÃO DA RESISTÊNCIA DE PROJETO\n";
 echo "-----------------------------------------------\n\n";
 //
 // Step 1.1: Parâmetros de entrada do algoritmo
-$fck        = 20;   
+$fck        = 20;
 
 //Step 1.2: Determinação de Fctm
 if ($fck<50) {
-	$fctm = 0.3*$fck^(2/3);
+    $fctm = 0.3*$fck^(2/3);
 } else {
-	$fctm = 2.12*log(1+0.11*$fck);
+    $fctm = 2.12*log(1+0.11*$fck);
 }
 
 //Step 1.3 : Determinação do Fctkinf
-	$fctkinf = 0.7*$fctm;
+    $fctkinf = 0.7*$fctm;
 //Step 1.5 : Determinação do Fctksup
-	$fctksup = 1.3*$fctm;
-
-?>
+    $fctksup = 1.3*$fctm;

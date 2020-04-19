@@ -41,13 +41,13 @@
 // bw            - Largura da seção de concreto                        (cm)
 // h             - Altura da seção de concreto                         (cm)
 // cob           - Cobrimento das armaduras                            (cm)
-// phiestribo    - Diâmetro do estribo                                 (mm) 
+// phiestribo    - Diâmetro do estribo                                 (mm)
 // d             - Altura útil da peça (0.8.h <= d <= 0.9.h)           (cm)
 // vsd           - cortante de cálculo                                 (kN)
 // modelo        - Modelo de cálculo para o cisalhamento podendo ser I ou II
 // fcd           - Resistência de cálculo à compressão do concreto     (MPa)
 // fyd           - Resistência de cálculo à tração do aço              (MPa)
-// fywd          - Resistência de cálculo à tração do aço corrigida    (MPa) 
+// fywd          - Resistência de cálculo à tração do aço corrigida    (MPa)
 // dlinha        - Altura útil complementar da peça                    (cm)
 // ac            - Área da seção transversal                           (cm2)
 // inercia       - Momento de inércia                                  (cm4)
@@ -59,7 +59,7 @@
 // alfav2        - Fator para cálculo da biela comprimida
 // vrd2          - Cisalhamento máximo na Biela comprimida
 // vc            - Resistência ao cisalhamento parcela do concreto    (kN)
-// vsw           - Força resistente necessária em armadura de aço     (kN)         
+// vsw           - Força resistente necessária em armadura de aço     (kN)
 // aswmin        - Armadura de aço mínima                             (cm2/m)
 // asw           - Área de aço necessária para cisalhamento           (cm2/m)
 // aswfinal      - Área de aço necessária para cisalhamento final     (cm2/m)
@@ -97,7 +97,7 @@ echo "-----------------------------------------------\n\n";
 
 // Step 1.1: Parâmetros de entrada do algoritmo
 $fck        = 25;
-$dmax       = 1.9;   
+$dmax       = 1.9;
 $fyk        = 500;
 $bw         = 20;
 $h          = 61;
@@ -107,46 +107,46 @@ $vsd        = 30;
 $modelo     = 1;
 
 // Step 1.2: Verificação de erros na fase de dados de entrada
-if ($fck > 90){
-$erro = 1;
-CISALHAMENTOCONCRETOARMADO01_v00_erros($erro);
-return;
+if ($fck > 90) {
+    $erro = 1;
+    CISALHAMENTOCONCRETOARMADO01_v00_erros($erro);
+    return;
 }
 
-if ($cob > 5.5){
-$erro = 2;
-CISALHAMENTOCONCRETOARMADO01_v00_erros($erro);
-return;
+if ($cob > 5.5) {
+    $erro = 2;
+    CISALHAMENTOCONCRETOARMADO01_v00_erros($erro);
+    return;
 }
 
-if ($fyk > 600){
-$erro = 3;
-CISALHAMENTOCONCRETOARMADO01_v00_erros($erro);
-return;
+if ($fyk > 600) {
+    $erro = 3;
+    CISALHAMENTOCONCRETOARMADO01_v00_erros($erro);
+    return;
 }
 
-if ($fck <= 0 || $fyk <= 0 || $bw <= 0 || $h <= 0 || $cob <= 0 || $d <= 0 || $vsd <= 0 || $dmax <=0){
-$erro = 4;
-CISALHAMENTOCONCRETOARMADO01_v00_erros($erro);
-return;
+if ($fck <= 0 || $fyk <= 0 || $bw <= 0 || $h <= 0 || $cob <= 0 || $d <= 0 || $vsd <= 0 || $dmax <=0) {
+    $erro = 4;
+    CISALHAMENTOCONCRETOARMADO01_v00_erros($erro);
+    return;
 }
 
-if ($fck > $fyk){
-$erro = 5;
-CISALHAMENTOCONCRETOARMADO01_v00_erros($erro);
-return;
+if ($fck > $fyk) {
+    $erro = 5;
+    CISALHAMENTOCONCRETOARMADO01_v00_erros($erro);
+    return;
 }
 
-if ($d >= $h){
-$erro = 6;
-CISALHAMENTOCONCRETOARMADO01_v00_erros($erro);
-return;
+if ($d >= $h) {
+    $erro = 6;
+    CISALHAMENTOCONCRETOARMADO01_v00_erros($erro);
+    return;
 }
 
-if ($dmax > 10){
-$erro = 7;
-CISALHAMENTOCONCRETOARMADO01_v00_erros($erro);
-return;
+if ($dmax > 10) {
+    $erro = 7;
+    CISALHAMENTOCONCRETOARMADO01_v00_erros($erro);
+    return;
 }
 
 
@@ -174,11 +174,10 @@ echo "-----------------------------------------------\n\n";
 $fcd = $fck / 1.4;
 $fyd = $fyk / 1.15;
 // Step 2.1.1: Tratamento da variável fyd conforme orientãção da NBR 6118 (ABNT, 2014)
-if ($fyd < 435){
-  $fywd = $fyd;
-}
-else{
-  $fywd = 435;
+if ($fyd < 435) {
+    $fywd = $fyd;
+} else {
+    $fywd = 435;
 }
 
 // Step 2.2: Determinação altura dlinha
@@ -186,15 +185,15 @@ $dlinha = $h - $d;
 
 // Step 2.3: Propriedades da seção sem a consideração de barras de aço
 $ac      = $bw * $h;
-$inercia = ($bw*pow($h,3))/12;
+$inercia = ($bw*pow($h, 3))/12;
 $ycg     = $h/2;
 $w       = $inercia/$ycg;
 
 // Step 2.4: Outros parâmetros para dimensionamento em função do fck
-if ($fck <= 50){
-  $fctm      = 0.30*pow($fck,(2/3));
-} elseif ($fck > 50 && $fck <= 90){
-  $fctm      = 2.12*log(1+0.11*$fck);
+if ($fck <= 50) {
+    $fctm      = 0.30*pow($fck, (2/3));
+} elseif ($fck > 50 && $fck <= 90) {
+    $fctm      = 2.12*log(1+0.11*$fck);
 }
 $fctinf = 0.7 * $fctm;
 $fctd   = $fctinf / 1.4;
@@ -221,23 +220,23 @@ echo "-----------------------------------------------\n\n";
 //
 //
 // Step 3.1: Verificação da biela de compressão pelo modelo I
-if ($modelo == 1){
-	$alfav2 = 1 - ($fck/250);
-	$vrd2   = 0.27 * $alfav2 * ($fcd/10) * $bw * $d;
-} elseif ($modelo == 2){
+if ($modelo == 1) {
+    $alfav2 = 1 - ($fck/250);
+    $vrd2   = 0.27 * $alfav2 * ($fcd/10) * $bw * $d;
+} elseif ($modelo == 2) {
     //AINDA VAI SER IMPLEMENTADO POR OUTRO ALUNO
 }
 
 // Step 3.2: Verificação de aviso da biela comprimida
-if ($vsd > $vrd2){
-  $aviso = 1;
-  CISALHAMENTOCONCRETOARMADO01_v00_avisos($aviso);
+if ($vsd > $vrd2) {
+    $aviso = 1;
+    CISALHAMENTOCONCRETOARMADO01_v00_avisos($aviso);
 }
 
 // Step 3.2: Verificação do valor da contribuição do concreto
-if ($modelo == 1){
-	$vc = 0.60 * ($fctd / 10) * $bw * $d;
-} elseif ($modelo == 2){
+if ($modelo == 1) {
+    $vc = 0.60 * ($fctd / 10) * $bw * $d;
+} elseif ($modelo == 2) {
     //AINDA VAI SER IMPLEMENTADO POR OUTRO ALUNO
 }
 
@@ -264,21 +263,18 @@ echo "Asmin                = $aswmin cm2/m\n";
 echo "-----------------------------------------------\n\n";
 
 // Step 3.4.2: Todas as condições de determinação da armadura de cisalhamento
-if ($vc >= $vsd){
-  $aviso = 2;
-  CISALHAMENTOCONCRETOARMADO01_v00_avisos($aviso);
-  $aswfinal = $aswmin;
-}
-else{
-  
-  $asw = ($vsw / (0.9 * $d * ($fywd / 10))) * 100;
-
-  if ($asw <= $aswmin){
+if ($vc >= $vsd) {
+    $aviso = 2;
+    CISALHAMENTOCONCRETOARMADO01_v00_avisos($aviso);
     $aswfinal = $aswmin;
-  }
-  else{
-    $aswfinal = $asw;
-  }
+} else {
+    $asw = ($vsw / (0.9 * $d * ($fywd / 10))) * 100;
+
+    if ($asw <= $aswmin) {
+        $aswfinal = $aswmin;
+    } else {
+        $aswfinal = $asw;
+    }
 }
 //
 //
