@@ -54,25 +54,22 @@ function FLEXAOPURACONCRETOARMADO02_v00_avisos($aviso)
 
 //
 //
-//=========================================================================%
-// STEP 1: RETURN EM FUNÇÃO DOS AVISOS DA ROTINA PRINCIPAL
-//=========================================================================%
+    //=========================================================================%
+    // STEP 1: RETURN EM FUNÇÃO DOS AVISOS DA ROTINA PRINCIPAL
+    //=========================================================================%
 //
 //
-// Step 1.1: Verificação de avisos
+    // Step 1.1: Verificação de avisos
 
-if       ($aviso == 1) {
-    echo "A peça será calculada com situação de armadura dupla\n\n";
-} elseif ($aviso == 2) {
-    echo "A peça necessita de uma área de aço > As,max \n\n"; 
-} elseif ($aviso == 3) {
-    echo "NÃO OK ! A bitola escolhida gera dreal < d \n\n"; 
-} elseif ($aviso == 4) {
-    echo "NÃO OK ! A bitola escolhida gera a > 10%.h. A armadura não pode ser considerada concentrada\n"; 
+    if ($aviso == 1) {
+        echo "A peça será calculada com situação de armadura dupla\n\n";
+    } elseif ($aviso == 2) {
+        echo "A peça necessita de uma área de aço > As,max \n\n";
+    } elseif ($aviso == 3) {
+        echo "NÃO OK ! A bitola escolhida gera dreal < d \n\n";
+    } elseif ($aviso == 4) {
+        echo "NÃO OK ! A bitola escolhida gera a > 10%.h. A armadura não pode ser considerada concentrada\n";
+    }
+
+    return;
 }
-
-return;
-
-}
-
-?>

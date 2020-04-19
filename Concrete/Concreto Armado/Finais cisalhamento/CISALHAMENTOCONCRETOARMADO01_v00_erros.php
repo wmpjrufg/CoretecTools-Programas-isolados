@@ -54,31 +54,28 @@ function CISALHAMENTOCONCRETOARMADO01_v00_erros($erro)
 
 //
 //
-//=========================================================================%
-// STEP 1: RETURN EM FUNÇÃO DOS ERROS DA ROTINA PRINCIPAL
-//=========================================================================%
+    //=========================================================================%
+    // STEP 1: RETURN EM FUNÇÃO DOS ERROS DA ROTINA PRINCIPAL
+    //=========================================================================%
 //
 //
-// Step 1.1: Verificação de erros
+    // Step 1.1: Verificação de erros
 
-if       ($erro == 1) {
-    echo "O fck deve ser inferior a 90 MPa\n";
-} elseif ($erro == 2) {
-    echo "O cobrimento (cob) recomendado deve ser inferior a 5.5 cm conforme Tabela 7.2 NBR 6118 \n";
-} elseif ($erro == 3) {
-    echo "Aço com fyk > 600 não são normatizados\n";
-} elseif ($erro == 4) {
-    echo "Não é permitida entrada de dados do tipo <=0 \n";
-} elseif ($erro == 5) {
-    echo "Verifique o valor do fck introduzido pos fck indicado maior que fyk\n";
-} elseif ($erro == 6) {
-    echo "Valor de deverá respeitar a relação d < h\n";
-} elseif ($erro == 7) {
-    echo "Valor do DMC (Diâmetro Máximo Característico) do agregado está maior que 10 cm\n";
+    if ($erro == 1) {
+        echo "O fck deve ser inferior a 90 MPa\n";
+    } elseif ($erro == 2) {
+        echo "O cobrimento (cob) recomendado deve ser inferior a 5.5 cm conforme Tabela 7.2 NBR 6118 \n";
+    } elseif ($erro == 3) {
+        echo "Aço com fyk > 600 não são normatizados\n";
+    } elseif ($erro == 4) {
+        echo "Não é permitida entrada de dados do tipo <=0 \n";
+    } elseif ($erro == 5) {
+        echo "Verifique o valor do fck introduzido pos fck indicado maior que fyk\n";
+    } elseif ($erro == 6) {
+        echo "Valor de deverá respeitar a relação d < h\n";
+    } elseif ($erro == 7) {
+        echo "Valor do DMC (Diâmetro Máximo Característico) do agregado está maior que 10 cm\n";
+    }
+
+    return;
 }
-
-return;
-
-}
-
-?>

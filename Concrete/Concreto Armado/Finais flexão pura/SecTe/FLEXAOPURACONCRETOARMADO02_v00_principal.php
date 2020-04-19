@@ -43,7 +43,7 @@
 // h             - Altura da seção de concreto                         (cm)
 // hf            - Altura da mesa nas seções tê                        (cm)
 // cob           - Cobrimento das armaduras                            (cm)
-// phiestribo    - Diâmetro do estribo                                 (mm) 
+// phiestribo    - Diâmetro do estribo                                 (mm)
 // d             - Altura útil da peça (0.8.h <= d <= 0.9.h)           (cm)
 // md            - Momento fletor de cálculo                           (kN.m)
 // fcd           - Resistência de cálculo à compressão do concreto     (MPa)
@@ -56,7 +56,7 @@
 // lambda        - Redutor da altura y do diagrama de tensões do concreto
 // alfac         - Redutor da tensão (sigma_cd) do diagrama de tensões do concreto
 // epsiloncu     - Deformação máximo suportada pelo concreto na compressão
-// duct          - Coeficiente de ductilidade NBR 6118 (item 14.6.4.3) 
+// duct          - Coeficiente de ductilidade NBR 6118 (item 14.6.4.3)
 // fctm          - Resistência de cálculo à tração do concreto no ensaio de comp. diametral  (MPa)
 // fctksup       - Resistência de cálculo à tração do concreto no ensaio de tração na flexão (MPa)
 // kmd           - Momento de cálculo (md) admensional
@@ -126,7 +126,7 @@ echo "-----------------------------------------------\n\n";
 
 // Step 1.1: Parâmetros de entrada do algoritmo
 $fck        = 25;
-$dmax       = 1.9;   
+$dmax       = 1.9;
 $fyk        = 500;
 $bf         = 350;
 $bw         = 20;
@@ -138,64 +138,64 @@ $d          = 25;
 $md         = 112;
 
 // Step 1.2: Verificação de erros na fase de dados de entrada
-if ($fck > 90){
-$erro = 1;
-FLEXAOPURACONCRETOARMADO02_v00_erros($erro);
-return;
+if ($fck > 90) {
+    $erro = 1;
+    FLEXAOPURACONCRETOARMADO02_v00_erros($erro);
+    return;
 }
 
-if ($cob > 5.5){
-$erro = 2;
-FLEXAOPURACONCRETOARMADO02_v00_erros($erro);
-return;
+if ($cob > 5.5) {
+    $erro = 2;
+    FLEXAOPURACONCRETOARMADO02_v00_erros($erro);
+    return;
 }
 
-if ($phiestribo > 16){
-$erro = 3;
-FLEXAOPURACONCRETOARMADO02_v00_erros($erro);
-return;
+if ($phiestribo > 16) {
+    $erro = 3;
+    FLEXAOPURACONCRETOARMADO02_v00_erros($erro);
+    return;
 }
 
-if ($fyk > 600){
-$erro = 4;
-FLEXAOPURACONCRETOARMADO02_v00_erros($erro);
-return;
+if ($fyk > 600) {
+    $erro = 4;
+    FLEXAOPURACONCRETOARMADO02_v00_erros($erro);
+    return;
 }
 
 if ($fck <= 0 || $fyk <= 0 || $bw <= 0 || $h <= 0 || $cob <= 0 || $phiestribo <= 0 || $d <= 0 || $md <= 0 || $dmax <=0 || $hf <=0 || $bf <=0) {
-$erro = 5;
-FLEXAOPURACONCRETOARMADO02_v00_erros($erro);
-return;
+    $erro = 5;
+    FLEXAOPURACONCRETOARMADO02_v00_erros($erro);
+    return;
 }
 
-if ($fck > $fyk){
-$erro = 6;
-FLEXAOPURACONCRETOARMADO02_v00_erros($erro);
-return;
+if ($fck > $fyk) {
+    $erro = 6;
+    FLEXAOPURACONCRETOARMADO02_v00_erros($erro);
+    return;
 }
 
-if ($d >= $h){
-$erro = 7;
-FLEXAOPURACONCRETOARMADO02_v00_erros($erro);
-return;
+if ($d >= $h) {
+    $erro = 7;
+    FLEXAOPURACONCRETOARMADO02_v00_erros($erro);
+    return;
 }
 
-if ($dmax > 10){
-$erro = 8;
-FLEXAOPURACONCRETOARMADO02_v00_erros($erro);
-return;
+if ($dmax > 10) {
+    $erro = 8;
+    FLEXAOPURACONCRETOARMADO02_v00_erros($erro);
+    return;
 }
 
-if ($hf < 4){
-$erro = 10;
-FLEXAOPURACONCRETOARMADO02_v00_erros($erro);
-return;
+if ($hf < 4) {
+    $erro = 10;
+    FLEXAOPURACONCRETOARMADO02_v00_erros($erro);
+    return;
 }
 
-if ($bf < $bw){
-$erro = 11;
-FLEXAOPURACONCRETOARMADO02_v00_erros($erro);
-return;
+if ($bf < $bw) {
+    $erro = 11;
+    FLEXAOPURACONCRETOARMADO02_v00_erros($erro);
+    return;
 }
 
 // print setup
@@ -230,33 +230,33 @@ $dlinha = $h - $d;
 
 // Step 2.3: Propriedades da seção sem a consideração de barras de aço
 $ac      = ($bf-$bw)*$hf + $bw*$h;
-$ycg     = (($bf-$bw)*(pow($hf,2)/2)+$bw*(pow($h,2)/2))/$ac;
-$inercia = (($bf-$bw)*pow($hf,3))/12;                      // ARRUMAR
+$ycg     = (($bf-$bw)*(pow($hf, 2)/2)+$bw*(pow($h, 2)/2))/$ac;
+$inercia = (($bf-$bw)*pow($hf, 3))/12;                      // ARRUMAR
 $w       = $inercia/$ycg;
 
 // Step 2.4: Outros parâmetros para dimensionamento em função do fck
-if ($fck <= 50){
-  $lambda    = 0.8;
-  $alfac     = 0.85;
-  $epsiloncu = 0.0035;
-  $duct      = 0.45;
-  $fctm      = 0.30*pow($fck,(2/3));
-} elseif ($fck > 50 && $fck <= 90){
-  $lambda    = 0.8 - ($fck - 50)/400;
-  $alfac     = 0.85 * (1 - ($fck - 50)/200);
-  $epsiloncu = 0.0026+0.035*pow((90-$fck)/100,4);
-  $duct      = 0.35;
-  $fctm      = 2.12*log(1+0.11*$fck);
+if ($fck <= 50) {
+    $lambda    = 0.8;
+    $alfac     = 0.85;
+    $epsiloncu = 0.0035;
+    $duct      = 0.45;
+    $fctm      = 0.30*pow($fck, (2/3));
+} elseif ($fck > 50 && $fck <= 90) {
+    $lambda    = 0.8 - ($fck - 50)/400;
+    $alfac     = 0.85 * (1 - ($fck - 50)/200);
+    $epsiloncu = 0.0026+0.035*pow((90-$fck)/100, 4);
+    $duct      = 0.35;
+    $fctm      = 2.12*log(1+0.11*$fck);
 }
 $fctksup     = 1.3*$fctm;
 
 // Step 2.5: Deformação de escoamento do aço a ser considerada
-if ($fyk == 250){
-  $epsilonsyield = 1.04/1000;
-} elseif ($fyk == 500){
-  $epsilonsyield = 2.07/1000;
+if ($fyk == 250) {
+    $epsilonsyield = 1.04/1000;
+} elseif ($fyk == 500) {
+    $epsilonsyield = 2.07/1000;
 } else {
-  $epsilonsyield = 2.48/1000;
+    $epsilonsyield = 2.48/1000;
 }
 
 echo "-----------------------------------------------\n";
@@ -285,38 +285,38 @@ echo "-----------------------------------------------\n\n";
 //
 // Step 3.1: Dimensionamento por formulações admiensionais Capítulo 3 --> CARVALHO, R.C.; PINHEIRO, L.M. Cálculo e Detalhamento de Estruturas Usuais de Concreto Armado, v2. 1.ed. São Paulo: Editora PINI Ltda., 2009. 589p.
 
-// Step 3.1.1: Verificação incial da linha neutra para a seção 
-$kmd  = $md * 100 / ($bf * pow ($d, 2)* ($fcd/10));
+// Step 3.1.1: Verificação incial da linha neutra para a seção
+$kmd  = $md * 100 / ($bf * pow($d, 2)* ($fcd/10));
 
 // Step 3.1.2: Trechos da equação de linha neutra (x) na forma geral
 $num1 = 2*($md*100 / ($bf * $alfac * ($fcd/10)));
-$num2 = pow ($d, 2);
+$num2 = pow($d, 2);
 
 // Step 3.1.3: Cálculo do restante dos fatores admensionais e linha neutra
-$kx   = (1 - sqrt (1-(2*$kmd)/$alfac))/$lambda;
+$kx   = (1 - sqrt(1-(2*$kmd)/$alfac))/$lambda;
 
 // Step 3.1.4: Verificação de erros na fase de dimensionamento
-if (is_nan($kx)){
-$erro = 9;
-FLEXAOPURACONCRETOARMADO02_v00_erros($erro);
-return;
+if (is_nan($kx)) {
+    $erro = 9;
+    FLEXAOPURACONCRETOARMADO02_v00_erros($erro);
+    return;
 }
 
 $kz       = (1-0.5*$lambda*$kx);
-$xx       = ($d-sqrt($num2-$num1))/$lambda;   
+$xx       = ($d-sqrt($num2-$num1))/$lambda;
 $x        = $kx * $d;
 $lambdax  = $lambda*$x;
 
-if ($hf >= $lambda*$x){
-  $tipodete = "Falso";
-} elseif ($hf < $lambda*$x){
-  $tipodete = "Verdadeiro";
+if ($hf >= $lambda*$x) {
+    $tipodete = "Falso";
+} elseif ($hf < $lambda*$x) {
+    $tipodete = "Verdadeiro";
 }
 
 // Step 3.3: Momento fletor mínimo
 $mdmin  = 0.8 * $w * ($fctksup/10);
-$kmdmin = $mdmin / ($bw * pow ($d, 2)* ($fcd/10));
-$kxmin  = (1 - sqrt (1-(2*$kmdmin)/$alfac))/$lambda;
+$kmdmin = $mdmin / ($bw * pow($d, 2)* ($fcd/10));
+$kxmin  = (1 - sqrt(1-(2*$kmdmin)/$alfac))/$lambda;
 $kzmin  = (1-0.5*$lambda*$kxmin);
 
 // Step 3.4: Área de aço mínima
@@ -325,11 +325,11 @@ $asmin = $mdmin/($kzmin*$d*$fyd/10);
 // Step 3.4.1: Taxa de armadura da seção
 $ro = ($asmin/$ac)*100;
 
-// Step 3.4.2: Verificação da armadura mínima 
-if ($ro < 0.15){
-  $asmin = $ac * 0.15/100;
-}else{
-  $asmin = $asmin;
+// Step 3.4.2: Verificação da armadura mínima
+if ($ro < 0.15) {
+    $asmin = $ac * 0.15/100;
+} else {
+    $asmin = $asmin;
 }
 
 // Step 3.5: Verificação da área de aço máxima
@@ -352,181 +352,181 @@ echo "-----------------------------------------------\n\n";
 // Step 3.6: Área de aço necessária
 
 // Step 3.6.1: Condição de armadura simples em um tê falso
-if ($tipodete == "Falso"){
+if ($tipodete == "Falso") {
 
-  // Step 3.6.1.1: Determinação dos momentos de cálculo m1d e m2d	
-	$m1d    = $md;
-	$m2d    = 0;
+  // Step 3.6.1.1: Determinação dos momentos de cálculo m1d e m2d
+    $m1d    = $md;
+    $m2d    = 0;
   
-  // Step 3.6.1.2: Checando o domínio da peça. Determinação do limite entre domínio 2 e 3
-	$lim23   = $epsiloncu / ($epsiloncu + 0.01);
-	$lnlim23 = $lim23*$d;
+    // Step 3.6.1.2: Checando o domínio da peça. Determinação do limite entre domínio 2 e 3
+    $lim23   = $epsiloncu / ($epsiloncu + 0.01);
+    $lnlim23 = $lim23*$d;
 
-  // Step 3.6.1.3: Checando o domínio da peça. Determinação do limite entre domínio 3 e 4
-	$lim34   = $epsiloncu / ($epsiloncu + $epsilonsyield);
-	$lnlim34 = $lim34*$d;
+    // Step 3.6.1.3: Checando o domínio da peça. Determinação do limite entre domínio 3 e 4
+    $lim34   = $epsiloncu / ($epsiloncu + $epsilonsyield);
+    $lnlim34 = $lim34*$d;
 
-  // Step 3.6.1.4: Escolhendo o modelo de dimensionamento (pode ser armadura simples ou dupla)
-	$dominio  = "";
-	$armadura = "";
-  if ($kx < $lim23){
-  	$dominio  = "Domínio 2";
-  	$armadura = "SIMPLES";
-	} elseif ($kx >= $lim23 && $kx <= $duct){
-  	$dominio  = "Domínio 3";
-  	$armadura = "SIMPLES";
-	} elseif ($kx > $duct){
-  	$dominio  = "Domínio 3";
-  	$armadura = "DUPLA";
-  	$aviso = 1;
-  	FLEXAOPURACONCRETOARMADO02_v00_avisos($aviso);
-	}
+    // Step 3.6.1.4: Escolhendo o modelo de dimensionamento (pode ser armadura simples ou dupla)
+    $dominio  = "";
+    $armadura = "";
+    if ($kx < $lim23) {
+        $dominio  = "Domínio 2";
+        $armadura = "SIMPLES";
+    } elseif ($kx >= $lim23 && $kx <= $duct) {
+        $dominio  = "Domínio 3";
+        $armadura = "SIMPLES";
+    } elseif ($kx > $duct) {
+        $dominio  = "Domínio 3";
+        $armadura = "DUPLA";
+        $aviso = 1;
+        FLEXAOPURACONCRETOARMADO02_v00_avisos($aviso);
+    }
 
-  echo "-----------------------------------------------\n";
-	echo "DIMENSIONAMENTO:\n";
-	echo "-----------------------------------------------\n";
-	echo "M1d                 = $m1d kN.cm\n";
-  echo "kmd                 = $kmd\n";
-	echo "kx                  = $kx\n";
-	echo "kz                  = $kz\n";
-	echo "Linha neutra        = $x cm\n";
-	echo "Fronteira D2 com D3 = $lim23\n";
-	echo "LN Front  D2 com D3 = $lnlim23 cm\n";
-	echo "Fronteira D3 com D4 = $lim34\n";
-	echo "LN Front  D3 com D4 = $lnlim34 cm\n";
-	echo "Domínio             = $dominio\n";
-	echo "Tipo de armadura    = $armadura\n";
-	echo "-----------------------------------------------\n\n"; 
+    echo "-----------------------------------------------\n";
+    echo "DIMENSIONAMENTO:\n";
+    echo "-----------------------------------------------\n";
+    echo "M1d                 = $m1d kN.cm\n";
+    echo "kmd                 = $kmd\n";
+    echo "kx                  = $kx\n";
+    echo "kz                  = $kz\n";
+    echo "Linha neutra        = $x cm\n";
+    echo "Fronteira D2 com D3 = $lim23\n";
+    echo "LN Front  D2 com D3 = $lnlim23 cm\n";
+    echo "Fronteira D3 com D4 = $lim34\n";
+    echo "LN Front  D3 com D4 = $lnlim34 cm\n";
+    echo "Domínio             = $dominio\n";
+    echo "Tipo de armadura    = $armadura\n";
+    echo "-----------------------------------------------\n\n";
   
-  // Step 3.6.1.5: Área de aço necessária na seção com contribuição somente da mesa
-  $ascalc = ($m1d*100)/($kz*$d*$fyd/10);
-  $as2    = 0;
+    // Step 3.6.1.5: Área de aço necessária na seção com contribuição somente da mesa
+    $ascalc = ($m1d*100)/($kz*$d*$fyd/10);
+    $as2    = 0;
   
- 	// Step 3.6.1.6: Verificação da armadura final as1 tracionada 
- 	if ($ascalc < $asmin){
-   	$as1 = $asmin;
- 	} else {
-   	$as1 = $ascalc;
-  }
+    // Step 3.6.1.6: Verificação da armadura final as1 tracionada
+    if ($ascalc < $asmin) {
+        $as1 = $asmin;
+    } else {
+        $as1 = $ascalc;
+    }
 
-  // Step 3.6.1.7: Área total na seção (seja ela tracionada ou comprimida)
-  $astot  = $as1 + $as2;
+    // Step 3.6.1.7: Área total na seção (seja ela tracionada ou comprimida)
+    $astot  = $as1 + $as2;
 }
 
 // Step 3.6.2: Condição de armadura simples em um tê verdadeiro
-if ($tipodete == "Verdadeiro"){
+if ($tipodete == "Verdadeiro") {
   
-  // Step 3.6.2.1: Determinação dos momentos de cálculo m1d e m2d	
-  $m1d    = (($bf-$bw)*$hf)*$alfac*($fcd/10)*($d-0.50*$hf);
-	$m2d    = ($md*100)-$m1d;
+  // Step 3.6.2.1: Determinação dos momentos de cálculo m1d e m2d
+    $m1d    = (($bf-$bw)*$hf)*$alfac*($fcd/10)*($d-0.50*$hf);
+    $m2d    = ($md*100)-$m1d;
 
-  // Step 3.6.2.2: Fatores admiensionais e linha neutra da seção
-  $kmd  = $m2d  / ($bw * pow ($d, 2)* ($fcd/10));
+    // Step 3.6.2.2: Fatores admiensionais e linha neutra da seção
+    $kmd  = $m2d  / ($bw * pow($d, 2)* ($fcd/10));
   
-  // Step 3.6.2.3: Trechos da equação de linha neutra (x) na forma geral
-  $num1 = 2*($m2d/($bw * $alfac * ($fcd/10)));
-  $num2 = pow ($d, 2);
+    // Step 3.6.2.3: Trechos da equação de linha neutra (x) na forma geral
+    $num1 = 2*($m2d/($bw * $alfac * ($fcd/10)));
+    $num2 = pow($d, 2);
   
-  // Step 3.6.2.4: Cálculo do restante dos fatores admensionais e linha neutra
-  $kx   = (1 - sqrt (1-(2*$kmd)/$alfac))/$lambda;
+    // Step 3.6.2.4: Cálculo do restante dos fatores admensionais e linha neutra
+    $kx   = (1 - sqrt(1-(2*$kmd)/$alfac))/$lambda;
   
-  // Step 3.6.2.4.1: Verificação de erros na fase de dimensionamento
-	if (is_nan($kx)){
-	  $erro = 9;
-	  FLEXAOPURACONCRETOARMADO02_v00_erros($erro);
-	  return;
-	}
+    // Step 3.6.2.4.1: Verificação de erros na fase de dimensionamento
+    if (is_nan($kx)) {
+        $erro = 9;
+        FLEXAOPURACONCRETOARMADO02_v00_erros($erro);
+        return;
+    }
 
-	$kz   = (1-0.5*$lambda*$kx);
-	$xx   = ($d-sqrt($num2-$num1))/$lambda;   
-	$x    = $kx * $d;
-	// Step 3.6.2.6: Checando o domínio da peça. Determinação do limite entre domínio 2 e 3
-	$lim23   = $epsiloncu / ($epsiloncu + 0.01);
-	$lnlim23 = $lim23*$d;
+    $kz   = (1-0.5*$lambda*$kx);
+    $xx   = ($d-sqrt($num2-$num1))/$lambda;
+    $x    = $kx * $d;
+    // Step 3.6.2.6: Checando o domínio da peça. Determinação do limite entre domínio 2 e 3
+    $lim23   = $epsiloncu / ($epsiloncu + 0.01);
+    $lnlim23 = $lim23*$d;
 
-	// Step 3.6.2.7: Checando o domínio da peça. Determinação do limite entre domínio 3 e 4
-	$lim34   = $epsiloncu / ($epsiloncu + $epsilonsyield);
-	$lnlim34 = $lim34*$d;
+    // Step 3.6.2.7: Checando o domínio da peça. Determinação do limite entre domínio 3 e 4
+    $lim34   = $epsiloncu / ($epsiloncu + $epsilonsyield);
+    $lnlim34 = $lim34*$d;
 
-	// Step 3.6.2.8: Escolhendo o modelo de dimensionamento (pode ser armadura simples ou dupla)
-	$dominio  = "";
-	$armadura = "";
+    // Step 3.6.2.8: Escolhendo o modelo de dimensionamento (pode ser armadura simples ou dupla)
+    $dominio  = "";
+    $armadura = "";
 
-	if ($kx < $lim23){
-  	$dominio  = "Domínio 2";
-  	$armadura = "SIMPLES";
-	} elseif ($kx >= $lim23 && $kx <= $duct){
-  	$dominio  = "Domínio 3";
-  	$armadura = "SIMPLES";
-	} elseif ($kx > $duct){
-  	$dominio  = "Domínio 3";
-  	$armadura = "DUPLA";
-  	$aviso = 1;
-  	FLEXAOPURACONCRETOARMADO02_v00_avisos($aviso);
-	}
+    if ($kx < $lim23) {
+        $dominio  = "Domínio 2";
+        $armadura = "SIMPLES";
+    } elseif ($kx >= $lim23 && $kx <= $duct) {
+        $dominio  = "Domínio 3";
+        $armadura = "SIMPLES";
+    } elseif ($kx > $duct) {
+        $dominio  = "Domínio 3";
+        $armadura = "DUPLA";
+        $aviso = 1;
+        FLEXAOPURACONCRETOARMADO02_v00_avisos($aviso);
+    }
   
-  // print steup
-  echo "-----------------------------------------------\n";
-	echo "DIMENSIONAMENTO:\n";
-	echo "-----------------------------------------------\n";
-  echo "M1d                 = $m1d kN.cm\n";
-  echo "M2d                 = $m2d kN.cm\n";
-	echo "kmd para m2d        = $kmd\n";
-	echo "kx  para m2d        = $kx\n";
-	echo "kz  para m2d        = $kz\n";
-	echo "Linha neutra (M2d)  = $x cm\n";
-	echo "Fronteira D2 com D3 = $lim23\n";
-	echo "LN Front  D2 com D3 = $lnlim23 cm\n";
-	echo "Fronteira D3 com D4 = $lim34\n";
-	echo "LN Front  D3 com D4 = $lnlim34 cm\n";
-	echo "Domínio             = $dominio\n";
-	echo "Tipo de armadura    = $armadura\n";
-	echo "-----------------------------------------------\n\n"; 
+    // print steup
+    echo "-----------------------------------------------\n";
+    echo "DIMENSIONAMENTO:\n";
+    echo "-----------------------------------------------\n";
+    echo "M1d                 = $m1d kN.cm\n";
+    echo "M2d                 = $m2d kN.cm\n";
+    echo "kmd para m2d        = $kmd\n";
+    echo "kx  para m2d        = $kx\n";
+    echo "kz  para m2d        = $kz\n";
+    echo "Linha neutra (M2d)  = $x cm\n";
+    echo "Fronteira D2 com D3 = $lim23\n";
+    echo "LN Front  D2 com D3 = $lnlim23 cm\n";
+    echo "Fronteira D3 com D4 = $lim34\n";
+    echo "LN Front  D3 com D4 = $lnlim34 cm\n";
+    echo "Domínio             = $dominio\n";
+    echo "Tipo de armadura    = $armadura\n";
+    echo "-----------------------------------------------\n\n";
 
-	if ($armadura == "SIMPLES"){
-  	$as11   = $m1d/(($d-(1/2)*$hf)*($fyd/10));
-  	$as12   = $m2d/($kz*$d*$fyd/10);
-  	$ascalc = $as11+$as12;
-  	$as2 = 0;
-  	if ($ascalc < $asmin){
-   		$as1 = $asmin;
-  	} else {
-   		$as1 = $ascalc;
-  	}
-	// Step 3.6.2.10: Área de aço necessária para mesa e alma simples. Condição armadura dupla
-  } else {
-  	$as11   = $m1d/(($d-(1/2)*$hf)*$fyd);
-  	$xlim = $duct * $d;
-  	$zlim = $d - 0.5 * $lambda * $xlim;
-  	$mlim = $bw * $alfac * ($fcd/10) * $lambda * $xlim * $zlim;
-  	$m2   = ($m2d) - $mlim;
-  	$as12 = $mlim / ($zlim * $fyd/10);
-  	$as2  = $m2 / (($d - $dlinha) * ($fyd/10));
-    $ascalc  = $as11 + $as12 ;
+    if ($armadura == "SIMPLES") {
+        $as11   = $m1d/(($d-(1/2)*$hf)*($fyd/10));
+        $as12   = $m2d/($kz*$d*$fyd/10);
+        $ascalc = $as11+$as12;
+        $as2 = 0;
+        if ($ascalc < $asmin) {
+            $as1 = $asmin;
+        } else {
+            $as1 = $ascalc;
+        }
+        // Step 3.6.2.10: Área de aço necessária para mesa e alma simples. Condição armadura dupla
+    } else {
+        $as11   = $m1d/(($d-(1/2)*$hf)*$fyd);
+        $xlim = $duct * $d;
+        $zlim = $d - 0.5 * $lambda * $xlim;
+        $mlim = $bw * $alfac * ($fcd/10) * $lambda * $xlim * $zlim;
+        $m2   = ($m2d) - $mlim;
+        $as12 = $mlim / ($zlim * $fyd/10);
+        $as2  = $m2 / (($d - $dlinha) * ($fyd/10));
+        $ascalc  = $as11 + $as12 ;
     
-    if ($ascalc < $asmin){
-   		$as1 = $asmin;
-  	 } else {
-   		$as1 = $ascalc;
-  	}
-	}
+        if ($ascalc < $asmin) {
+            $as1 = $asmin;
+        } else {
+            $as1 = $ascalc;
+        }
+    }
   
-  // Step 3.6.2.11: Área total na seção (seja ela tracionada ou comprimida)
-  $astot  = $as1 + $as2;
+    // Step 3.6.2.11: Área total na seção (seja ela tracionada ou comprimida)
+    $astot  = $as1 + $as2;
 }
 
 // Step 3.6.3: Verificação da armadura máxima da seção
-if ($astot > $asmax){
-	$aviso = 2;
- 	FLEXAOPURACONCRETOARMADO02_v00_avisos($aviso); 
+if ($astot > $asmax) {
+    $aviso = 2;
+    FLEXAOPURACONCRETOARMADO02_v00_avisos($aviso);
 }
 
 // Step 3.6.4: Armadura de pele na seção
-if ($h <= 60){
- 	$aspele = 0;
-}else{
- 	$aspele = 0.10 * $ac / 100; //cm²
-} 
+if ($h <= 60) {
+    $aspele = 0;
+} else {
+    $aspele = 0.10 * $ac / 100; //cm²
+}
 //
 //
 //=========================================================================%
@@ -539,12 +539,12 @@ if ($h <= 60){
 echo "-----------------------------------------------\n";
 echo "RESULTADOS FINAIS DO DIMENSIONAMENTO:\n";
 echo "-----------------------------------------------\n";
-if ($armadura == "DUPLA"){
-  echo "x  = $xlim cm \n";
-  echo "βx = x/d = $duct \n";
-} elseif ($armadura == "SIMPLES"){
-  echo "x  = $x cm \n";
-  echo "βx = x/d = $kx \n";
+if ($armadura == "DUPLA") {
+    echo "x  = $xlim cm \n";
+    echo "βx = x/d = $duct \n";
+} elseif ($armadura == "SIMPLES") {
+    echo "x  = $x cm \n";
+    echo "βx = x/d = $kx \n";
 }
 // Step 4.2: Dados finais da armadura
 echo "$dominio\n";
@@ -567,10 +567,9 @@ echo "-----------------------------------------------\n";
 echo "DETALHAMENTO DAS ARMADURAS\n";
 echo "-----------------------------------------------\n";
 
-if ($armadura == "DUPLA"){
-  FLEXAOPURACONCRETOARMADO02_v00_detalhamento($dmax,$as1,$h,$d,$bw,$cob,$phiestribo);
-  FLEXAOPURACONCRETOARMADO02_v00_detalhamento($dmax,$as2,$h,$d,$bw,$cob,$phiestribo); 
-} elseif ($armadura == "SIMPLES"){
-  FLEXAOPURACONCRETOARMADO02_v00_detalhamento($dmax,$as1,$h,$d,$bw,$cob,$phiestribo);
+if ($armadura == "DUPLA") {
+    FLEXAOPURACONCRETOARMADO02_v00_detalhamento($dmax, $as1, $h, $d, $bw, $cob, $phiestribo);
+    FLEXAOPURACONCRETOARMADO02_v00_detalhamento($dmax, $as2, $h, $d, $bw, $cob, $phiestribo);
+} elseif ($armadura == "SIMPLES") {
+    FLEXAOPURACONCRETOARMADO02_v00_detalhamento($dmax, $as1, $h, $d, $bw, $cob, $phiestribo);
 }
-?>
