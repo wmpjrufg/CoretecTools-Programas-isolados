@@ -28,6 +28,7 @@
 // ---------- Descrição do programa
 //
 // O programa abaixo verifica avisos no programa FLEXAOPURACONCRETOARMADO01_v00_principal
+// Para teste utilize: https://repl.it/~
 //
 // ----------
 
@@ -97,10 +98,11 @@ function FLEXAOPURACONCRETOARMADO02_v00_detalhamento($dmax, $as, $h, $d, $bw, $c
 //
     // print setup
     echo "\n";
-    echo "-----------------------------------------------\n";
+    echo "###############################################\n";
     echo "DETALHAMENTO PARA As = $as cm²\n";
-    echo "-----------------------------------------------\n";
+    echo "###############################################\n";
     echo "\n";
+    $nj = array();
 
     for ($i = 0; $i < $tam50; $i++) {
   
@@ -110,13 +112,15 @@ function FLEXAOPURACONCRETOARMADO02_v00_detalhamento($dmax, $as, $h, $d, $bw, $c
         $numbarrasnec = ceil($as/$asphi);
   
         // print setup
+        echo "###############################################\n";
         echo "Detalhamento Φ $Bit50[$i] \n";
-        echo "Total de barras   = $numbarrasnec Φ ", $phi*10, "\n";
-        echo "AsΦ               = ", $asphi, " cm2\n";
+        echo "###############################################\n\n";
+        echo "Total de barras        = $numbarrasnec Φ ", $phi*10, "\n";
+        echo "AsΦ                    = ", $asphi, " cm2\n";
   
         // Step 2.2: Acréscimo da mossa para detalhamento
         $phil = $phi + 0.04 * $phi;
-        echo "Φ+mossa           = ", $phil*10, " mm\n";
+        echo "Φ+mossa                = ", $phil*10, " mm\n";
 
         // Step 2.3: Inicializando altura vertical e horizontal
         $ah = 0;
@@ -167,44 +171,97 @@ function FLEXAOPURACONCRETOARMADO02_v00_detalhamento($dmax, $as, $h, $d, $bw, $c
   
         // Step 2.9: Alojamento das barras
         if ($nbar == 2 && $ncam <> 1) {
-            echo "Espaço insuficiente para alojar a armadura.\n\n"; //Mensagem para o usuário caso a bitola selecionada do droplist não atenda a verificação
+            //echo "Espaço insuficiente para alojar a armadura.\n\n"; //Mensagem para o usuário caso a bitola selecionada do droplist não atenda a verificação
         } else {
     
     // Step 2.9.1: Verificação do centróide da armadura
-            $numerador   = 0;
-            $denominador = 0;
+            $numerador     = 0;
+            $denominador   = 0;
+            $numerocamada  = 0;
+            
+            
+            // Step 2.9.2: Posicionanmento do centróide da armadura nas camadas
+            $nj[$i]=array();
+            for ($j=0; $j < $ncam; $j++) {
+                
+                $numerocamada = $numerocamada + 1;
+                // Step 2.9.2.1: Centróide da armadura da primeira camada
+                if ($j == 0) {
+                                       
+                    if ($nbar > $nmaxdebarporcam) {
+                        $nj[$i][$j] = $nmaxdebarporcam;
+                    } else {
+                        $nj[$i][$j] = $nbar;
+                    }
 
-            // Step 2.9.2: Centróide da armadura da primeira camada
-            $y1 = $cob + ($phiestribo/10) + ($phi/2);
-  
-            // Step 2.9.3: Posicionanmento do centróide da armadura das camadas subsequentes
-            for ($j=1; $j <= $nmaxdebarporcam; $j++) {
-                if ($nbar >= $nmaxdebarporcam) {
-                    $nj = $nmaxdebarporcam;
+                    // Ycg da camada
+                    $ycam = $cob + ($phiestribo/10) + ($phil/2);
+                    $y1   = $ycam;
+                    // Numerador e denominador da eq. de CG
+                    $numerador   = $numerador + ($asphi * $nj[$i][$j] * $ycam);
+                    $denominador = $denominador + ($asphi * $nj[$i][$j]);
+                    // Número de barras restantes para próxima camada
+                    $nbar        = $nbar - $nj[$i][$j];
+
+                    // Print Setup
+                    echo "Camada $numerocamada ---------------\n";
+                    echo "ycg camada             = $ycam cm \n";
+                    //echo "Quant. barras          = $nj[$i][$j] \n";
+                    echo "Quant. barras          = ";
+                    print_r($nj[$i][$j]);
+                    echo "\nSomatorio Ai.yi        = $numerador cm3 \n";
+                    echo "Somatorio Ai           = $denominador cm2 \n";
                 } else {
-                    $nj = $nbar;
+
+                    // Step 2.9.2.2: Centróide da armadura das camadas subsequentes
+                    if ($nbar > $nmaxdebarporcam) {
+                        $nj[$i][$j] = $nmaxdebarporcam;
+                    } else {
+                        $nj[$i][$j] = $nbar;
+                    }
+                    
+                    // Ycg da camada
+                    $ycam = $ycam + ($j)*($av + $phil);
+                    
+                    // Numerador e denominador da eq. de CG
+                    $numerador   = $numerador + ($asphi * $nj[$i][$j] * $ycam);
+                    $denominador = $denominador + ($asphi * $nj[$i][$j]);
+                    
+                    // Número de barras restantes para próxima camada
+                    $nbar        = $nbar - $nj[$i][$j];
+                    
+                    // Print Setup
+                    echo "Camada $numerocamada ---------------\n";
+                    echo "ycg camada             = $ycam cm \n";
+                    echo "Quant. barras          = ";
+                    print_r($nj[$i][$j]);
+                    echo "\nSomatorio Ai.yi        = $numerador cm3 \n";
+                    echo "Somatorio Ai           = $denominador cm2 \n";
                 }
-    
-                $nbar        = $nbar - $nj;
-                $ycam        = $y1 + ($j-1) * ($av + $phi);
-                $numerador   = $numerador + ($asphi * $nj * $ycam);
-                $denominador = $denominador + ($asphi * $nj);
+
             }
 
-            // Step 2.9.4: Determinação do ycg da armadura e do dreal
+            // Step 2.9.3: Determinação do ycg da armadura e do dreal
             $ycgarmadura = $numerador / $denominador;
             $dreal       = $h - $ycgarmadura;
+
+            if ($dreal <= 0) {
+                $aviso=5;
+                FLEXAOPURACONCRETOARMADO02_v00_avisos($aviso);
+            }
+
             $ateste      = $ycgarmadura - $y1;
             $testeh      = (10/100)*$h;
 
             // print setup
-            echo "Ycg_armadura = $ycgarmadura cm \n";
-            echo "dreal        = $dreal cm \n";
-            echo "a            = $ateste cm \n";
-            echo "10%.h        = $testeh cm \n";
+            echo "Ycg_armadura           = $ycgarmadura cm \n";
+            echo "dreal                  = $dreal cm \n";
+            echo "a                      = $ateste cm \n";
+            echo "10%.h                  = $testeh cm \n";
         
             if ($dreal >= $d && $ateste <= 0.1*$h) {
-                echo "OK!: deral > d \n\n";
+                echo "OK!: deral > d \n";
+                echo "OK!: a <10%.h  \n\n";
             } else {
                 if ($dreal < $d) {
                     $aviso=3;
@@ -220,4 +277,7 @@ function FLEXAOPURACONCRETOARMADO02_v00_detalhamento($dmax, $as, $h, $d, $bw, $c
             }
         }
     }
+
 }
+
+?>

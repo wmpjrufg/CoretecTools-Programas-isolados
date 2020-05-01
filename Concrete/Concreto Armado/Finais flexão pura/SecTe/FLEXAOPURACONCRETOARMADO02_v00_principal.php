@@ -135,7 +135,7 @@ $hf         = 7;
 $cob        = 2.0;
 $phiestribo = 6.3;
 $d          = 25;
-$md         = 112;
+$md         = 850;
 
 // Step 1.2: Verificação de erros na fase de dados de entrada
 if ($fck > 90) {
@@ -562,14 +562,29 @@ echo "-----------------------------------------------\n";
 //
 //
 // Step 5.1: Detalhamento das armaduras
-echo "\n";
-echo "-----------------------------------------------\n";
-echo "DETALHAMENTO DAS ARMADURAS\n";
-echo "-----------------------------------------------\n";
 
 if ($armadura == "DUPLA") {
+
+echo "\n";
+echo "-----------------------------------------------\n";
+echo "DETALHAMENTO PARA UMA SITUAÇÃO DE ARMADURA DUPLA\n";
+echo "-----------------------------------------------\n";
+
+echo "\nBARRAS TRACIONADAS TIPO AS1\n";
     FLEXAOPURACONCRETOARMADO02_v00_detalhamento($dmax, $as1, $h, $d, $bw, $cob, $phiestribo);
+
+echo "\nBARRAS COMPRIMIDAS TIPO AS2\n";
     FLEXAOPURACONCRETOARMADO02_v00_detalhamento($dmax, $as2, $h, $d, $bw, $cob, $phiestribo);
+
 } elseif ($armadura == "SIMPLES") {
+
+echo "\n";
+echo "-----------------------------------------------\n";
+echo "DETALHAMENTO PARA UMA SITUAÇÃO DE ARMADURA SIMPLES\n";
+echo "-----------------------------------------------\n";
+
+echo "\nBARRAS TRACIONADAS TIPO AS1\n";
     FLEXAOPURACONCRETOARMADO02_v00_detalhamento($dmax, $as1, $h, $d, $bw, $cob, $phiestribo);
 }
+
+?>
