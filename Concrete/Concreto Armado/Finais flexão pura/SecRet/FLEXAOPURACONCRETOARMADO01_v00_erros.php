@@ -27,6 +27,7 @@
 // ---------- Descrição do programa
 //
 // O programa abaixo verifica erros no programa FLEXAOPURACONCRETOARMADO01_v00_principal
+// Para teste utilize: https://repl.it/~
 //
 // ----------
 
@@ -83,3 +84,5 @@ function FLEXAOPURACONCRETOARMADO01_v00_erros($erro)
 
     return;
 }
+
+?>

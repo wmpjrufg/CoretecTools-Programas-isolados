@@ -27,6 +27,7 @@
 // ---------- Descrição do programa
 //
 // O programa abaixo verifica avisos no programa FLEXAOPURACONCRETOARMADO01_v00_principal
+// Para teste utilize: https://repl.it/~
 //
 // ----------
 
@@ -54,22 +55,27 @@ function FLEXAOPURACONCRETOARMADO01_v00_avisos($aviso)
 
 //
 //
-    //=========================================================================%
-    // STEP 1: RETURN EM FUNÇÃO DOS AVISOS DA ROTINA PRINCIPAL
-    //=========================================================================%
+//=========================================================================%
+// STEP 1: RETURN EM FUNÇÃO DOS AVISOS DA ROTINA PRINCIPAL
+//=========================================================================%
 //
 //
-    // Step 1.1: Verificação de avisos
+// Step 1.1: Verificação de avisos
 
-    if ($aviso == 1) {
-        echo "A peça será calculada com situação de armadura dupla\n\n";
-    } elseif ($aviso == 2) {
-        echo "A peça necessita de uma área de aço > As,max \n\n";
-    } elseif ($aviso == 3) {
-        echo "NÃO OK ! A bitola escolhida gera dreal < d \n\n";
-    } elseif ($aviso == 4) {
-        echo "NÃO OK ! A bitola escolhida gera a > 10%.h. A armadura não pode ser considerada concentrada\n";
-    }
-
-    return;
+if       ($aviso == 1) {
+    echo "A peça será calculada com situação de armadura dupla\n\n";
+} elseif ($aviso == 2) {
+    echo "A peça necessita de uma área de aço > As,max \n\n"; 
+} elseif ($aviso == 3) {
+    echo "NÃO OK ! A bitola escolhida gera dreal < d \n\n"; 
+} elseif ($aviso == 4) {
+    echo "NÃO OK ! A bitola escolhida gera a > 10%.h. A armadura não pode ser considerada concentrada\n";
+} elseif ($aviso == 5) {
+    echo "Esse Detalhamento não pode ser feito geometricamente pois dreal < 0, as armaduras tem um número de camadas que gera uma altura > h\n"; 
 }
+
+return;
+
+}
+
+?>

@@ -28,6 +28,7 @@
 // ---------- Descrição do programa
 //
 // O programa abaixo determina a quantidade armadura necessária para seções retangulares de concreto armado submetidas à momento fletor
+// Para teste utilize: https://repl.it/~
 //
 // ----------
 
@@ -120,15 +121,15 @@ echo "CONCRETO ARMADO - DIMENSIONAMENTO DE SEÇÃO RETANGULARES SOB AÇÃO DE UM
 echo "-----------------------------------------------\n\n";
 
 // Step 1.1: Parâmetros de entrada do algoritmo
-$fck        = 25;
+$fck        = 20;
 $dmax       = 1.9;
 $fyk        = 500;
-$bw         = 20;
-$h          = 61;
-$cob        = 2.0;
+$bw         = 25;
+$h          = 90;
+$cob        = 3.0;
 $phiestribo = 6.3;
-$d          = 45;
-$md         = 300;
+$d          = 80;
+$md         = 600;
 
 // Step 1.2: Verificação de erros na fase de dados de entrada
 if ($fck > 90) {
@@ -437,9 +438,27 @@ echo "DETALHAMENTO DAS ARMADURAS\n";
 echo "-----------------------------------------------\n";
 
 if ($armadura == "DUPLA") {
+
+echo "\n";
+echo "-----------------------------------------------\n";
+echo "DETALHAMENTO PARA UMA SITUAÇÃO DE ARMADURA DUPLA\n";
+echo "-----------------------------------------------\n";
+
+echo "\nBARRAS TRACIONADAS TIPO AS1\n";
     FLEXAOPURACONCRETOARMADO01_v00_detalhamento($dmax, $as1, $h, $d, $bw, $cob, $phiestribo);
 
+echo "\nBARRAS COMPRIMIDAS TIPO AS2\n";
     FLEXAOPURACONCRETOARMADO01_v00_detalhamento($dmax, $as2, $h, $d, $bw, $cob, $phiestribo);
+
 } elseif ($armadura == "SIMPLES") {
+
+echo "\n";
+echo "-----------------------------------------------\n";
+echo "DETALHAMENTO PARA UMA SITUAÇÃO DE ARMADURA SIMPLES\n";
+echo "-----------------------------------------------\n";
+
+echo "\nBARRAS TRACIONADAS TIPO AS1\n";
     FLEXAOPURACONCRETOARMADO01_v00_detalhamento($dmax, $as1, $h, $d, $bw, $cob, $phiestribo);
+    
 }
+?>

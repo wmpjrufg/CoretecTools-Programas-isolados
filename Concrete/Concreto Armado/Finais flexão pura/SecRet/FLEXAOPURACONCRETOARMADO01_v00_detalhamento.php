@@ -28,6 +28,7 @@
 // ---------- Descrição do programa
 //
 // O programa abaixo verifica avisos no programa FLEXAOPURACONCRETOARMADO01_v00_principal
+// Para teste utilize: https://repl.it/~
 //
 // ----------
 
@@ -97,10 +98,11 @@ function FLEXAOPURACONCRETOARMADO01_v00_detalhamento($dmax, $as, $h, $d, $bw, $c
 //
     // print setup
     echo "\n";
-    echo "-----------------------------------------------\n";
+    echo "###############################################\n";
     echo "DETALHAMENTO PARA As = $as cm²\n";
-    echo "-----------------------------------------------\n";
+    echo "###############################################\n";
     echo "\n";
+    $nj = array();
 
     for ($i = 0; $i < $tam50; $i++) {
   
@@ -110,7 +112,9 @@ function FLEXAOPURACONCRETOARMADO01_v00_detalhamento($dmax, $as, $h, $d, $bw, $c
         $numbarrasnec = ceil($as/$asphi);
   
         // print setup
+        echo "###############################################\n";
         echo "Detalhamento Φ $Bit50[$i] \n";
+        echo "###############################################\n\n";
         echo "Total de barras        = $numbarrasnec Φ ", $phi*10, "\n";
         echo "AsΦ                    = ", $asphi, " cm2\n";
   
@@ -174,59 +178,64 @@ function FLEXAOPURACONCRETOARMADO01_v00_detalhamento($dmax, $as, $h, $d, $bw, $c
             $numerador     = 0;
             $denominador   = 0;
             $numerocamada  = 0;
-            $nphiporcamada = array();
+            
             
             // Step 2.9.2: Posicionanmento do centróide da armadura nas camadas
+            $nj[$i]=array();
             for ($j=0; $j < $ncam; $j++) {
+                
                 $numerocamada = $numerocamada + 1;
                 // Step 2.9.2.1: Centróide da armadura da primeira camada
                 if ($j == 0) {
                                        
                     if ($nbar > $nmaxdebarporcam) {
-                        $nj = $nmaxdebarporcam;
+                        $nj[$i][$j] = $nmaxdebarporcam;
                     } else {
-                        $nj = $nbar;
+                        $nj[$i][$j] = $nbar;
                     }
 
                     // Ycg da camada
                     $ycam = $cob + ($phiestribo/10) + ($phil/2);
                     $y1   = $ycam;
                     // Numerador e denominador da eq. de CG
-                    $numerador   = $numerador + ($asphi * $nj * $ycam);
-                    $denominador = $denominador + ($asphi * $nj);
+                    $numerador   = $numerador + ($asphi * $nj[$i][$j] * $ycam);
+                    $denominador = $denominador + ($asphi * $nj[$i][$j]);
                     // Número de barras restantes para próxima camada
-                    $nbar        = $nbar - $nj;
+                    $nbar        = $nbar - $nj[$i][$j];
 
                     // Print Setup
                     echo "Camada $numerocamada ---------------\n";
                     echo "ycg camada             = $ycam cm \n";
-                    echo "Quant. barras          = $nj \n";
-                    echo "Somatorio Ai.yi        = $numerador cm3 \n";
+                    //echo "Quant. barras          = $nj[$i][$j] \n";
+                    echo "Quant. barras          = ";
+                    print_r($nj[$i][$j]);
+                    echo "\nSomatorio Ai.yi        = $numerador cm3 \n";
                     echo "Somatorio Ai           = $denominador cm2 \n";
                 } else {
 
                     // Step 2.9.2.2: Centróide da armadura das camadas subsequentes
                     if ($nbar > $nmaxdebarporcam) {
-                        $nj = $nmaxdebarporcam;
+                        $nj[$i][$j] = $nmaxdebarporcam;
                     } else {
-                        $nj = $nbar;
+                        $nj[$i][$j] = $nbar;
                     }
                     
                     // Ycg da camada
                     $ycam = $ycam + ($j)*($av + $phil);
                     
                     // Numerador e denominador da eq. de CG
-                    $numerador   = $numerador + ($asphi * $nj * $ycam);
-                    $denominador = $denominador + ($asphi * $nj);
+                    $numerador   = $numerador + ($asphi * $nj[$i][$j] * $ycam);
+                    $denominador = $denominador + ($asphi * $nj[$i][$j]);
                     
                     // Número de barras restantes para próxima camada
-                    $nbar        = $nbar - $nj;
+                    $nbar        = $nbar - $nj[$i][$j];
                     
                     // Print Setup
                     echo "Camada $numerocamada ---------------\n";
                     echo "ycg camada             = $ycam cm \n";
-                    echo "Quant. barras          = $nj \n";
-                    echo "Somatorio Ai.yi        = $numerador cm3 \n";
+                    echo "Quant. barras          = ";
+                    print_r($nj[$i][$j]);
+                    echo "\nSomatorio Ai.yi        = $numerador cm3 \n";
                     echo "Somatorio Ai           = $denominador cm2 \n";
                 }
 
@@ -235,6 +244,12 @@ function FLEXAOPURACONCRETOARMADO01_v00_detalhamento($dmax, $as, $h, $d, $bw, $c
             // Step 2.9.3: Determinação do ycg da armadura e do dreal
             $ycgarmadura = $numerador / $denominador;
             $dreal       = $h - $ycgarmadura;
+
+            if ($dreal <= 0) {
+                $aviso=5;
+                FLEXAOPURACONCRETOARMADO01_v00_avisos($aviso);
+            }
+
             $ateste      = $ycgarmadura - $y1;
             $testeh      = (10/100)*$h;
 
@@ -262,4 +277,7 @@ function FLEXAOPURACONCRETOARMADO01_v00_detalhamento($dmax, $as, $h, $d, $bw, $c
             }
         }
     }
+
 }
+
+?>
