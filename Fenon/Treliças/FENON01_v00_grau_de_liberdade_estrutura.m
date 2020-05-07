@@ -18,8 +18,8 @@
 
 % <<<<<>>>>> Descrição
 %
-% Determina o deslocamentos nodais de uma treliça utilizando o Método dos
-% Elementos Finitos
+% Determina os graus de liberdade da estrutura completa. Totais, livres e
+% restritos
 %
 % <<<<<>>>>>
 
@@ -102,7 +102,7 @@ for j=1:nPres
     % Step 2.1.2.4: Restrição em Y
     restricaoY      = precricoes(j,3);
     
-    % Step 2.1.2.5: Armazenamento em caso positivo o grau de liberdade da restrição em X
+    % Step 2.1.2.5: Armazenamento em caso positivo o grau de liberdade da restrição em Y
     if restricaoY ~= 0
         
         % Step 2.1.2.5.1: Contabilizando uma posição no contador em caso positivo
