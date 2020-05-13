@@ -11,8 +11,8 @@
 // ######################################################################
 //
 //
-// Nome:    Determinação da resistência a tração do concreto
-// Versão:  CONCRETO01_v00_propriedade_dos_materiais
+// Nome:    Perda de protensão por deformação inicial
+// Versão:  CONCRETO02_v00_perda_de_prot_por_def_inicial
 // Notas:
 // 15-04-20 - C. M. S. Carneiro and W. C. do Valle finalizaram a versão beta
 //
