@@ -1,0 +1,110 @@
+% ######################################################################
+% UNIVERSIDADE FEDERAL DE CATALÃO(UFCat)
+% FACULDADE DE ENGENHARIA
+% Autores:
+% Wanderlei Malaquias Pereira Junior
+% Danilo Cavalcanti Borges
+% Sylvia Regina Mesquita de Almeida
+% Colaboradores
+%
+%
+% ######################################################################
+
+% <<<<<>>>>>            FENON (Finite Element Non Linear Analysis)
+% Versão:               v00
+% Notas
+% 01-05-20              - Versão inicial implementada por W M Pereira Junior e D C Borges
+% <<<<<>>>>>
+
+% <<<<<>>>>>            Descrição            <<<<<>>>>> %
+%
+% Realiza a análise estrutural de uma treliça 2D utilizando o Método dos Elementos Finitos
+%
+% <<<<<>>>>>                                 <<<<<>>>>> %
+
+% <<<<<>>>>>            Variáveis            <<<<<>>>>> %
+%
+% Escalares:
+% ------------------------------------------------------------------------
+% nNos                  - Quantidade de nós da estrutura
+% sz                  	- Retorna a dimensão (linhas) da matriz
+% nElem                 - Quantidade de elementos da estrutura
+% nMat                  - Quantidade de materiais da estrutura
+% nSec                  - Quantidade de seções transversais
+% nApo                 	- Quantidade de nós com algum tipo de apoio externo
+% nCargNo               - Quantidade de cargas nodais externas
+% nRecalNo              - Quantidade de recalques nodais impostos
+% el                    - Contador interno do elemento analisado de um laço
+% nGrauLiberdadePorNo   - Total de graus de liberdade por nó
+% nNosPorElemento       - Total de graus de liberdade por elemento
+% tipoDePrescricao      - Tipo de prescrição adotada na análise. Podendo ser DESLOCAMENTO ou FORCA
+% nPassos               - Número passos ou divisões de uma determinada prescrição. Processo incremental
+% tolerancia            - Critério de parada para o processo iterativo
+% alphaPasso            - Passo da busca no processo iterativo para X(t+1) = X(t) + alpha.Sk(t)
+% nGrauLibTotal         - Número de graus de liberdade totais da estrutura
+% nGrauLibRestrito      - Número de graus de liberdade restritos da estrutura
+% nGrauLibLivre         - Número de graus de liberdade livres da estrutura
+% passoPres             - Contador da quantidade de passos prescritos no processo incremental
+% nIter               	- Número de iterações para determinação do equilibrio da estrutura Fext=Fint por exemplo
+
+
+% ------------------------------------------------------------------------
+%
+% Vetores
+%
+% area                  - Vetor que armazena a área dos elementos da estrutura
+% comprimento 		- Vetor que armazena o comprimento dos elementos da estrutura
+% cossenoDiretor 	- Vetor que armazena o cos diretor dos elementos da estrutura
+% senoDiretor	 	- Vetor que armazena o sin diretor dos elementos da estrutura
+% grauLiberdadeTotal    - Vetor Grau de Liberdade Total da estrutura
+% grauLiberdadeRestrito - Vetor Grau de Liberdade Restrito da estrutura
+% grauLiberdadeLivre    - Vetor Grau de Liberdade Livre da estrutura
+% forcaExterna          - Vetor de força nodal completo da estrutura
+% recalExterna          - Vetor de recalque nodal completo da estrutura
+% deltaForca		- Vetor de força nodal incremental completo	
+% deltaRecal		- Vetor de recalque nodal incremental completo
+% deslocAtual		- Vetor de deslocamento atualizado do passo incremental
+%
+% Matrizes
+%
+% coordenadas           - Matriz de coordenadas da treliça 		[coordenadaX coordenadaY]
+% elementos             - Matriz de elementos e suas conectividades 	[No1 No2 TipoMaterial TipoSecao]
+% materiais             - Matriz de materiais que compõem a estrutura 	[ModuloE Poisson TensaoEscoamentoTrac DefEscoamentoTrac  TensaoEscoamentoComp DefEscoamentoComp]
+% secoes                - Matriz de seções transversais dos elementos  	[AreaDaSecao]
+% apoios           	- Matriz de nós com apoios 			[No RestricaoEmX RestricaoEmY]
+% cargasNodais          - Matriz de cargas nodais 			[No ForcaEmX ForcaEmY]
+% recalqNodais          - Matriz de deslocamento nodais impostos	[No RecalqueEmX RecalqueEmY] Obs.: Em caso de controle de força (tipoDePrescricao = 'FORCA') utilizar recalqNodais = [0 0 0];
+%
+% <<<<<>>>>>
+
+
+% <<<<<>>>>>            Variáveis            <<<<<>>>>> %
+%
+% Escalares:
+% ------------------------------------------------------------------------
+% nMat                  - Quantidade de materiais da estrutura
+% nElem                 - Quantidade de elementos da estrutura
+% moduloYoung           - Módulo de elasticidade inicial do material
+% sigmaEscTrac          - Tensão de escoamento no elasto-plástico perfeito em situação de tração
+% epsilonEscTrac        - Deformação que correspondente a tensão de escoamento no elasto-plástico perfeito em situação de tração
+% sigmaEscComp          - Tensão de escoamento no elasto-plástico perfeito em situação de compressão
+% epsilonEscComp        - Deformação que correspondente a tensão de escoamento no elasto-plástico perfeito em situação de compressão
+% deformacaoElemento    - Deformação do elemento (el)
+% ------------------------------------------------------------------------
+%
+% Vetores
+% ------------------------------------------------------------------------
+% deformacoes           - Vetor que armazena as deformação locais dos elementos analisados
+% ------------------------------------------------------------------------
+%
+% Matrizes
+% ------------------------------------------------------------------------
+% materiais             - Matriz de materiais que compõem a estrutura [ModuloE Poisson TensaoEscoamentoTrac DefEscoamentoTrac  TensaoEscoamentoComp DefEscoamentoComp]
+% ------------------------------------------------------------------------
+%
+% <<<<<>>>>>
+
+
+
+
+

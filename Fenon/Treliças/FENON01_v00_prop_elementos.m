@@ -26,21 +26,21 @@
 %
 % Escalares:
 % ------------------------------------------------------------------------
-% el 			- Contador auxiliar do elemento analisado vêm laço externo
+% el                    - Contador auxiliar do elemento analisado vêm laço externo
 % no1                   - Nó 1 analisado
 % no2                   - Nó 2 analisado
-% secao 		- Código da seção analisada que corresponde a posição em secoes 
-% area 			- Valor da área analisada que corresponde ao valor descrito pelo usuário 
+% secao                 - Código da seção analisada que corresponde a posição em secoes 
+% area                  - Valor da área analisada que corresponde ao valor descrito pelo usuário 
 % xNo1                  - Coordenada X do nó 1 analisado
 % xNo2                  - Coordenada X do nó 2 analisado
 % xNo1                  - Coordenada Y do nó 1 analisado
 % xNo2                  - Coordenada Y do nó 2 analisado
-% deltaX 		- Distância Euclidiana na direção X	
-% deltaY 		- Distância Euclidiana na direção Y			
-% comprimento 		- Comprimento da barra ou elemento	
-% ang 			- Ângulo em relação ao sistema global de coordenadas
-% coss 			- Cosseno diretor
-% senn 			- Seno diretor
+% deltaX                - Distância Euclidiana na direção X	
+% deltaY                - Distância Euclidiana na direção Y			
+% comprimento           - Comprimento da barra ou elemento	
+% ang                   - Ângulo em relação ao sistema global de coordenadas
+% coss                  - Cosseno diretor
+% senn                  - Seno diretor
 % ------------------------------------------------------------------------
 %
 % Vetores
@@ -58,7 +58,7 @@
 %
 % <<<<<>>>>>                                 <<<<<>>>>> %
 
-function [area,comprimento,coss,senn]=Propriedades(coordenadas,secoes,elementos,el)
+function [area,comprimento,coss,senn]=FENON01_v00_prop_elementos(coordenadas,elementos,secoes,el)
 %%
 %
 %
@@ -84,19 +84,18 @@ yNo2=coordenadas(no2,2);
 deltaX=xNo2-xNo1;
 deltaY=yNo2-yNo1;
 
-% Step 1.2.1: Comprimento total do elemento
+% Step 1.2.2: Comprimento total do elemento
 comprimento=sqrt((xNo1-xNo2)^2+(yNo1-yNo2)^2);
 
 % Step 1.3: Parâmetros referentes a inclinação do elemento
+coss=deltaX/comprimento;
+senn=deltaY/comprimento;
+
 % if deltaX==0
 %    ang=90;
 % else
 %    ang=atan(deltaY/deltaX);
 % end
-
-coss=deltaX/comprimento;
-senn=deltaY/comprimento;
-
 
 
 end

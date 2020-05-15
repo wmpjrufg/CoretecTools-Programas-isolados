@@ -10,46 +10,49 @@
 %
 % ######################################################################
 
-% <<<<<>>>>> FENON (Finite Element Non Linear Analysis)
-% Versão:   v00
+% <<<<<>>>>>            FENON (Finite Element Non Linear Analysis)
+% Versão:               v00
 % Notas
-% 01-05-20  - Versão inicial implementada por W M Pereira Junior e D C Borges
+% 01-05-20              - Versão inicial implementada por W M Pereira Junior e D C Borges
 % <<<<<>>>>>
 
-% <<<<<>>>>> Descrição
+% <<<<<>>>>>            Descrição            <<<<<>>>>> %
 %
-% Determina os graus de liberdade da estrutura completa. Totais, livres e
-% restritos
+% Determina os graus de liberdade da estrutura completa. Totais, livres e restritos
 %
-% <<<<<>>>>>
+% <<<<<>>>>>                                 <<<<<>>>>> %
 
-% <<<<<>>>>> Variáveis
+% <<<<<>>>>>            Variáveis            <<<<<>>>>> %
 %
 % Escalares:
+% ------------------------------------------------------------------------
 % nNos                  - Quantidade de nós da estrutura
 % nGrauLiberdadePorNo   - Total de grau de liberdade por nó da estrutura
-% i                     - Contador auxiliar
-% nGrauLibTotal         - Número de graus de liberdade totais da estrutura
-% nGrauLibRestrito      - Número de graus de liberdade restritos da estrutura
-% nGrauLibLivre         - Número de graus de liberdade livres da estrutura
 % nPres                 - Quantidade de nós com prescrições
+% i                     - Contador auxiliar para laço do tipo for
+% j                     - Contador auxiliar para laço do tipo for
+% nGrauLibTotal         - Número de graus de liberdade totais da estrutura
+% contadorAux           - Contador auxiliar para montagem do vetor de graus restritos
 % noAnalisado           - Código do nó analisado
 % restricaoX            - Valor da prescrição na direção X
 % restricaoY            - Valor da prescrição na direção Y
-% contadorAux           - Contador auxiliar para montagem do vetor de graus restritos
+% nGrauLibRestrito      - Número de graus de liberdade restritos da estrutura
+% nGrauLibLivre         - Número de graus de liberdade livres da estrutura
+% ------------------------------------------------------------------------
 %
 % Vetores
-%
+% ------------------------------------------------------------------------
 % grauLiberdadeTotal    - Vetor Grau de Liberdade Total da estrutura
 % grauLiberdadeRestrito - Vetor Grau de Liberdade Restrito da estrutura
 % grauLiberdadeLivre    - Vetor Grau de Liberdade Livre da estrutura
-%
+% ------------------------------------------------------------------------
 %
 % Matrizes
+% ------------------------------------------------------------------------
+% precricoes            - Matriz de nós prescritos [No PrescricaoEmX PrescricaoEmY]
+% ------------------------------------------------------------------------
 %
-% Precricoes            - Matriz de nós prescritos [No PrescricaoEmX PrescricaoEmY]
-%
-% <<<<<>>>>>
+% <<<<<>>>>>                                 <<<<<>>>>> %
 
 function[grauLiberdadeTotal,nGrauLibTotal,grauLiberdadeRestrito,nGrauLibRestrito,grauLiberdadeLivre,nGrauLibLivre]=FENON01_v00_grau_de_liberdade_estrutura(nNos,nGrauLiberdadePorNo,nPres,precricoes)
 %%
@@ -61,13 +64,15 @@ function[grauLiberdadeTotal,nGrauLibTotal,grauLiberdadeRestrito,nGrauLibRestrito
 %
 %
 % Step 1.1: Cálculo do vetor de Graus de Liberdade Total
-for i=1:nGrauLiberdadePorNo*nNos
+grauLiberdadeTotal = zeros(1,nGrauLiberdadePorNo*nNos);
+for i = 1:nGrauLiberdadePorNo * nNos
+    
     grauLiberdadeTotal(i)=i;
+    
 end
 
 % Step 1.2:  Cálculo da quantidade do número de Graus Liberdade Total
-nGrauLibTotal=length(grauLiberdadeTotal);
-
+nGrauLibTotal = length(grauLiberdadeTotal);
 %%
 %
 %
@@ -114,7 +119,7 @@ for j=1:nPres
 end
 
 % Step 2.2:  Cálculo da quantidade do número de Graus Liberdade Restrito
-nGrauLibRestrito=length(grauLiberdadeRestrito);
+nGrauLibRestrito    = length(grauLiberdadeRestrito);
 
 %%
 %
@@ -125,9 +130,9 @@ nGrauLibRestrito=length(grauLiberdadeRestrito);
 %
 %
 % Step 3.1:  Cálculo do vetor de Graus de Liberdade Livres
-grauLiberdadeLivre=setdiff(grauLiberdadeTotal,grauLiberdadeRestrito);
+grauLiberdadeLivre  = setdiff(grauLiberdadeTotal,grauLiberdadeRestrito);
 
 % Step 3.2:  Cálculo da quantidade do número de Graus Liberdade Livre
-nGrauLibLivre=length(grauLiberdadeRestrito);
+nGrauLibLivre       = length(grauLiberdadeRestrito);
 
 end

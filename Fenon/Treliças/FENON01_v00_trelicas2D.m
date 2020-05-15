@@ -10,152 +10,140 @@
 %
 % ######################################################################
 
-% <<<<<>>>>> FENON (Finite Element Non Linear Analysis)
-% Versão:   v00
+% <<<<<>>>>>            FENON (Finite Element Non Linear Analysis)
+% Versão:               v00
 % Notas
-% 01-05-20      - Versão inicial implementada por W M Pereira Junior e D C Borges
+% 01-05-20              - Versão inicial implementada por W M Pereira Junior e D C Borges
 % <<<<<>>>>>
 
-% <<<<<>>>>> Descrição
+% <<<<<>>>>>            Descrição            <<<<<>>>>> %
 %
-% Determina o deslocamentos nodais de uma treliça utilizando o Método dos
-% Elementos Finitos
+% Realiza a análise estrutural de uma treliça 2D utilizando o Método dos Elementos Finitos
 %
-% <<<<<>>>>>
+% <<<<<>>>>>      
 
-% <<<<<>>>>> Variáveis
+% <<<<<>>>>>            Variáveis            <<<<<>>>>> %
 %
 % Escalares:
+% ------------------------------------------------------------------------
 % nNos                  - Quantidade de nós da estrutura
+% sz                  	- Retorna a dimensão (linhas) da matriz
 % nElem                 - Quantidade de elementos da estrutura
 % nMat                  - Quantidade de materiais da estrutura
 % nSec                  - Quantidade de seções transversais
-% nPres                 - Quantidade de nós com prescrições
+% nApo                 	- Quantidade de nós com algum tipo de apoio externo
 % nCargNo               - Quantidade de cargas nodais externas
+% nRecalNo              - Quantidade de recalques nodais impostos
+% el                    - Contador interno do elemento analisado de um laço
 % nGrauLiberdadePorNo   - Total de graus de liberdade por nó
 % nNosPorElemento       - Total de graus de liberdade por elemento
+% tipoDePrescricao      - Tipo de prescrição adotada na análise. Podendo ser DESLOCAMENTO ou FORCA
+% nPassos               - Número passos ou divisões de uma determinada prescrição. Processo incremental
+% tolerancia            - Critério de parada para o processo iterativo
+% alphaPasso            - Passo da busca no processo iterativo para X(t+1) = X(t) + alpha.Sk(t)
 % nGrauLibTotal         - Número de graus de liberdade totais da estrutura
 % nGrauLibRestrito      - Número de graus de liberdade restritos da estrutura
 % nGrauLibLivre         - Número de graus de liberdade livres da estrutura
-% elem                  - Contador interno para cada elemento da estrutura
-% nPassos               - Número passos ou divisões de uma determinada prescrição
+% passoPres             - Contador da quantidade de passos prescritos no processo incremental
 % nIter               	- Número de iterações para determinação do equilibrio da estrutura Fext=Fint por exemplo
-% tipoDePrescricao      - Tipo de prescrição adotada na análise. Podendo ser DESLOCAMENTO ou FORCA
-% tolerancia            - Critério de parada para o processo iterativo
-% alphaPasso            - Passo da busca no processo iterativo para X(t+1) = X(t) + alpha.Sk(t)
-%
+% ------------------------------------------------------------------------
 %
 % Vetores
-%
+% ------------------------------------------------------------------------
+% nosTrajetoriaEqu      - Vetor que informa os nós onde se deseja visualizar a trajetória de equilibrio
+% area                  - Vetor que armazena a área dos elementos da estrutura
+% comprimento           - Vetor que armazena o comprimento dos elementos da estrutura
+% cossenoDiretor        - Vetor que armazena o cos diretor dos elementos da estrutura
+% senoDiretor           - Vetor que armazena o sin diretor dos elementos da estrutura
 % grauLiberdadeTotal    - Vetor Grau de Liberdade Total da estrutura
 % grauLiberdadeRestrito - Vetor Grau de Liberdade Restrito da estrutura
 % grauLiberdadeLivre    - Vetor Grau de Liberdade Livre da estrutura
+% forcaExterna          - Vetor de força nodal completo da estrutura
+% recalExterna          - Vetor de recalque nodal completo da estrutura
+% deltaForca            - Vetor de força nodal incremental completo	
+% deltaRecal            - Vetor de recalque nodal incremental completo
+% deslocAtual           - Vetor de deslocamento atualizado do passo incremental
+% ------------------------------------------------------------------------
 %
 % Matrizes
-%
-% coordenadas           - Matriz de coordenadas da treliça [coordenadaX coordenadaY]
-% elementos             - Matriz de elementos e suas conectividades [No1 No2 TipoMaterial TipoSecao]
-% materiais             - Matriz de materiais que compõem a estrutura [ModuloE Poisson]
-% secoes                - Matriz de seções transversais dos elementos  [AreaDaSecao]
-% precricoes            - Matriz de nós prescritos [No PrescricaoEmX PrescricaoEmY]
-% cargasNodais          - Matriz de cargas nodais [No ForçaEmX ForçaEmY]
+% ------------------------------------------------------------------------
+% coordenadas           - Matriz de coordenadas da treliça              [coordenadaX coordenadaY]
+% elementos             - Matriz de elementos e suas conectividades 	[No1 No2 TipoMaterial TipoSecao]
+% materiais             - Matriz de materiais que compõem a estrutura 	[ModuloE Poisson TensaoEscoamentoTrac DefEscoamentoTrac  TensaoEscoamentoComp DefEscoamentoComp]
+% secoes                - Matriz de seções transversais dos elementos  	[AreaDaSecao]
+% apoios                - Matriz de nós com apoios                      [No RestricaoEmX RestricaoEmY]
+% cargasNodais          - Matriz de cargas nodais                       [No ForcaEmX ForcaEmY]
+% recalqNodais          - Matriz de deslocamento nodais impostos        [No RecalqueEmX RecalqueEmY] Obs.: Em caso de controle de força (tipoDePrescricao = 'FORCA') utilizar recalqNodais = [0 0 0];
+% ------------------------------------------------------------------------
 %
 % <<<<<>>>>>
 
-function FENON01_v00_trelicas2D
-clc; clear all;
+function FENON01_v00_trelicas2D(config)
 %%
 %
 %
 %=========================================================================%
-% STEP 1: DADOS INICIAIS DO SISTEMA ESTRUTURAL
+% STEP 1: DADOS INICIAIS DO SISTEMA ESTRUTURAL VIA VARIÁVEL CONFIG
 %=========================================================================%
 %
 %
-% Step 1.1: Matriz de coordenadas da estrutura
-coordenadas     =  [0.0   5.0;
-                    5.0   5.0;
-                    0.0   0.0;
-                    5.0   0.0];
+% Step 1.1: Atribuição dos dados da entrada principal
+coordenadas             = config.coordenadas;
+nNos                    = config.nNos;
+elementos               = config.elementos;
+nElem                   = config.nElem;
+materiais               = config.materiais;
+nMat                    = config.nMat;
+secoes                  = config.secoes;
+nSec                    = config.nSec;
+apoios                  = config.apoios ;
+nApo                    = config.nApo;
+cargasNodais            = config.cargasNodais;
+nCargNo                 = config.nCargNo;
+recalqNodais            = config.recalqNodais;
+nRecalNo                = config.nRecalNo;
+nPres                   = config.nPres;
+prescricoes             = config.prescricoes;
+nGrauLiberdadePorNo     = config.nGrauLiberdadePorNo;
+nNosPorElemento         = config.nNosPorElemento;
+tipoDePrescricao        = config.tipoDePrescricao;
+nPassos                 = config.nPassos;
+tolerancia              = config.tolerancia;
+iter                    = config.iter;
+nosTrajetoriaEqu        = config.nosTrajetoriaEqu; 
+nPlotagens              = config.nPlotagens; 
 
-% Step 1.2: Quantidade de nós da estrutura
-sz              =   size(coordenadas); nNos=sz(1);
+% Step 1.2: Determinação das propriedades dos elementos do sistema estrutural
 
-% Step 1.3: Matriz de conexões dos elementos
-elementos       =  [1    2    1     1;
-                    1    4    1     2;
-                    3    2    1     2;
-                    4    2    1     1;
-                    3    4    1     1];
-
-% Step 1.4: Quantidade de nós da estrutura
-sz              =   size(elementos); nElem=sz(1);
-
-% Step 1.5: Matriz de materiais
-materiais       =   [300E9 0.00010];
-
-% Step 1.6: Quantidade de materiais da estrutura
-sz              =   size(materiais); nMat=sz(1);
-
-% Step 1.7: Matriz de seções transversais
-secoes          =   [0.0005;0.0002];
-
-% Step 1.8: Quantidade de seções dos elementos
-sz              =   size(secoes); nSec=sz(1);
-
-% Step 1.9: Matriz de apoios
-apoios      =   [1 1 1;3 1 1];
-
-% Step 1.10: Quantidade de nós com algum tipo de prescrição
-sz              =   size(apoios); nApo=sz(1);
-
-% Step 1.11: Matriz de cargas nodais da estrutura
-cargasNodais    =  [2  50  -100;
-                    4  50  -100];
-                
-% Step 1.12: Quantidade de cargas nodais externas
-sz              =   size(cargasNodais); nCargNo=sz(1);
-                
-% Step 1.13: Matriz de recalques nodais
-recalqNodais    =   [0 0 0];
-
-% Step 1.14: Quantidade de nós com algum tipo de prescrição
-sz              =   size(recalqNodais); nRecalNo=sz(1);
-
-
-% Step 1.15: Determinação das propriedades dos elementos do sistema estrutural
-
-% Step 1.15.1: Inicializando variáveis
+% Step 1.2.1: Inicializando variáveis
 area            = zeros(1,nElem);
 comprimento     = zeros(1,nElem);
 cossenoDiretor  = zeros(1,nElem);
 senoDiretor     = zeros(1,nElem);
 
-% Step 1.15.2: Detemrinação das propriedades dos elementos da malha de MEF
+% Step 1.2.2: Detemrinação das propriedades dos elementos da malha de MEF
 for el=1:nElem
     
-    [area(el),comprimento(el),cossenoDiretor(el),senoDiretor(el)]=Propriedades(coordenadas,secoes,elementos,el);
+    [area(el),comprimento(el),cossenoDiretor(el),senoDiretor(el)]=FENON01_v00_prop_elementos(coordenadas,elementos,secoes,el);
     
 end
-
-
-% Step 1.16: Configurações gerais para análise estrutural via MEF 
-nGrauLiberdadePorNo     = 2;
-nNosPorElemento         = 2;
-tipoDePrescricao        = 'FORCA';
-nPassos                 = 150;
-tolerancia              = 1e-08;
-alphaPasso              = 1e-4;
 %%
 %
 %
 %=========================================================================%
-% STEP 2: DETERMINAÇÃO DOS GRAUS DE LIBERDADE DA ESTRUTURA
+% STEP 2: DETERMINAÇÃO DOS GRAUS DE LIBERDADE DA ESTRUTURA E CRIAÇÃO DO
+%         VETOR DE HISTÓRICO DAS VARIÁVEIS
 %=========================================================================%
 %
 %
 % Etapa 2.1: Determinação dos tipos de graus de liberdade da estrutura
-[grauLiberdadeTotal,nGrauLibTotal,grauLiberdadeRestrito,nGrauLibRestrito,grauLiberdadeLivre,nGrauLibLivre]=FENON01_v00_grau_de_liberdade_estrutura(nNos,nGrauLiberdadePorNo,nApo,apoios);
+[grauLiberdadeTotal,nGrauLibTotal,grauLiberdadeRestrito,nGrauLibRestrito,grauLiberdadeLivre,nGrauLibLivre]=FENON01_v00_grau_de_liberdade_estrutura(nNos,nGrauLiberdadePorNo,nPres,prescricoes);
+
+% Etapa 2.2: Criação dos vetore de histórico das variáveis
+historicoUnod = zeros (nGrauLibTotal,nPassos);
+historicoFext = zeros (nGrauLibTotal,nPassos);
+historicoFint = zeros (nGrauLibTotal,nPassos);
+historicoTens = zeros (nElem,nPassos);
 %%
 %
 %
@@ -178,6 +166,8 @@ elseif  strcmp(tipoDePrescricao,'DESLOCAMENTO')
     deltaRecal      = recalExterna/nPassos;
     
 end
+
+fprintf('%s\n','Processando a estrutura...');
 %%
 %
 %
@@ -208,48 +198,216 @@ forcaExtAtual   = zeros(nGrauLibTotal,1);
 % Step 4.2.2: Processo incremental
 for passoPres=1:nPassos
     
-    % Step 4.2.2.1: Inicializando o vetor de deslocamentos do passo atual
+    % Step 4.2.2.1: Inicializando o vetor de deslocamentos e forças externas do passo atual
     if      strcmp(tipoDePrescricao,'FORCA')
         
-        deslocAtual=deslocNovo;
+        deslocAtual=deslocNovo';
+        forcaExtAtual = forcaExtAtual + deltaForca;
         
     elseif  strcmp(tipoDePrescricao,'DESLOCAMENTO')
         
         deslocAtual=deslocNovo+deltaRecal;
         
+        
     end
+    deslocAtual
+    forcaExtAtual
     
-    % Step 4.2.2.2: Inicializando o vetor de forças externas do passo atual
-    if      strcmp(tipoDePrescricao,'FORCA')
-        
-        forcaExtAtual = forcaExtAtual + deltaForca;
-        
-    elseif  strcmp(tipoDePrescricao,'DESLOCAMENTO')
-        
-        % forcaExtAtual=forcaExtAtual+deltaForca; % TEM QUE IMPLEMENTAR TEM
-        % QUE IMPLEMENTAR
-        
-    end
     
     % Step 4.2.2.3: Montagem do vetor de deformações dos elementos
-    [deformacoes]=FENON01_v00_deformacoes_barras(nElem,deslocAtual,elementos,nGrauLiberdadePorNo,nNosPorElemento,comprimento,cossenoDiretor,senoDiretor);
+    [deformacoes]       = FENON01_v00_deformacoes_barras(nElem,deslocAtual,elementos,nGrauLiberdadePorNo,nNosPorElemento,comprimento,cossenoDiretor,senoDiretor);
+    deformacoes
     
-    % Step 4.2.2.4: Atualização das tensões internas nos elementos e módulo de elasticidade
-    [deformacoes]=FENON01_v00_deformacoes_barras(nElem,deslocAtual,elementos,nGrauLiberdadePorNo,nNosPorElemento,comprimento,cossenoDiretor,senoDiretor);
+    % Step 4.2.2.4: Atualização do vetor de tensões internas nos elementos e módulo de elasticidade de acordo com a curva de referência do marterial
+    [tensoes,modsE]     = FENON01_v00_modelo_material(materiais,nElem,deformacoes);
+    tensoes
+    modsE
     
-    % Step 4.2.2.5: Atualização do vetor de forças internas
-    fem= ConstitutiveModel(fem,deformacoes);
-        
+    % Step 4.2.2.5: Atualização do vetor de forças internas dos elementos
+    [forcasInternas]    = FENON01_v00_forcas_internas(nGrauLibTotal,nElem,tensoes,area,comprimento,cossenoDiretor,senoDiretor,elementos,nGrauLiberdadePorNo,nNosPorElemento);
+    forcasInternas
+    
+    residuoForcas       = forcaExtAtual - forcasInternas
+    
+    conv                = norm(residuoForcas)/(1+norm(forcaExtAtual))
+         
     % Newton-Raphson ou qualquer processo númerico para equilibro Fext=Fint
-    while change>conv
+    while conv > tolerancia && iter < 100
         
-        
-        
-    end
+        rigidezEstrut = zeros(nGrauLibTotal,nGrauLibTotal);
+        for el=1:nElem
+            % Step 4.2.2.5: Montagem da matriz de rigidez da estrutura
+            [rigidezEstrut]=RigidezEstrutura(coordenadas,modsE(el),secoes,elementos,el,2,rigidezEstrut);
+        end
     
+    rigidezEstrut(grauLiberdadeLivre,grauLiberdadeLivre)
+    rigidezEstrut
+    
+    deltaDesloc(grauLiberdadeLivre,1) = inv(rigidezEstrut(grauLiberdadeLivre,grauLiberdadeLivre))*residuoForcas(grauLiberdadeLivre,1)
+    
+    deslocIncremental = deslocAtual + deltaDesloc
+    
+    % Step 4.2.2.3: Montagem do vetor de deformações dos elementos
+    [deformacoes]       = FENON01_v00_deformacoes_barras(nElem,deslocIncremental,elementos,nGrauLiberdadePorNo,nNosPorElemento,comprimento,cossenoDiretor,senoDiretor);
+    deformacoes
+    
+    % Step 4.2.2.4: Atualização do vetor de tensões internas nos elementos e módulo de elasticidade de acordo com a curva de referência do marterial
+    [tensoes,modsE]     = FENON01_v00_modelo_material(materiais,nElem,deformacoes);
+    tensoes
+    modsE
+    
+    % Step 4.2.2.5: Atualização do vetor de forças internas dos elementos
+    [forcasInternas]    = FENON01_v00_forcas_internas(nGrauLibTotal,nElem,tensoes,area,comprimento,cossenoDiretor,senoDiretor,elementos,nGrauLiberdadePorNo,nNosPorElemento);
+    forcasInternas
+    
+    residuoForcas       = forcaExtAtual - forcasInternas
+    
+    conv                = norm(residuoForcas(grauLiberdadeLivre,1))/(1+norm(forcaExtAtual(grauLiberdadeLivre,1)))
+    
+    deslocAtual = deslocIncremental
+        
+    iter = iter +1
+    end
+    %%
+    %
+    %
+    %=========================================================================%
+    % STEP 5: ETAPA DE ARMAZENAMENTO DOS RESULTADOS DO PASSO
+    %=========================================================================%
+    %
+    %
+    % Step 5.1: Histórico das variáveis
+    historicoUnod(:,passoPres) = deslocAtual(:,1);
+    historicoFext(:,passoPres) = forcaExtAtual(:,1);
+    historicoFint(:,passoPres) = forcasInternas(:,1);
+    historicoTens(:,passoPres) = tensoes(:,1);
     
     
 end
+historicoUnod
+historicoFext
+historicoFint
+
+%%
+%
+%
+%=========================================================================%
+% STEP 6: PLOTAGEM DAS TRAJETÓRIAS DE EQUILÍBRIO
+%=========================================================================%
+%
+%
+% Step 6.1: Plotagem
+for i=1:nPlotagens
+    
+    figure(i+1);
+    xlabel('deslocamento (m)')
+    ylabel('Carga (N)')
+    noAnalisado = nosTrajetoriaEqu(i);
+    
+    hold on
+    title(['Trajetória de Equilíbrio em Y nó ',num2str(noAnalisado)])
+    plotDirecaoX=historicoUnod(2*noAnalisado,:);
+    plotDirecaoY=historicoFext(2*noAnalisado,:);
+    plot(plotDirecaoX,plotDirecaoY,'b--o');
+    
+    hold on
+    plot(0,0,'-mo',...
+    'LineWidth',2,...
+    'MarkerEdgeColor','k',...
+    'MarkerFaceColor',[.49 1 .63],...
+    'MarkerSize',10);
+    
+end
+
+
+% Step 6.2: Plota a estrutura deformada
+
+escala=input('Digite a escala a ser utilizada(100):');
+if (isempty(escala)==1)
+   escala=100;
+end
+
+fprintf('%s\n','Desenhando a estrutura deformada...');
+figure(nPlotagens+2);
+
+for el=1:nElem
+    
+    no1=elementos(el,1);
+    no2=elementos(el,2);
+    Xno1=coordenadas(no1,1);
+    Yno1=coordenadas(no1,2);
+    Xno2=coordenadas(no2,1);
+    Yno2=coordenadas(no2,2);
+    line([Xno1 Xno2],[Yno1 Yno2],'LineWidth',1);
+    
+end
+% 
+% axis equal;
+% axis off;
+% title({'Estrutura deformada';'      '});
+% 
+% % Step 1.2: Numeração dos elementos
+% for el=1:nElem
+%     no1=elementos(el,1);
+%     no2=elementos(el,2);
+%     Xno1=coordenadas(no1,1);
+%     Yno1=coordenadas(no1,2);
+%     Xno2=coordenadas(no2,1);
+%     Yno2=coordenadas(no2,2);
+%     texto=text((Xno1+Xno2)/2,(Yno1+Yno2)/2,num2str(el));
+%     set(texto,'Color','black','FontSize',14)
+% end
+% 
+% % Step 1.3: Numeração dos nós
+% for no=1:nNos
+%     Xno=coordenadas(no,1);
+%     Yno=coordenadas(no,2);
+%     hold on
+%     raio=0.1;
+%     intervaloDesenho = 0:pi/50:2*pi;
+%     xIntervalo = raio * cos(intervaloDesenho) + Xno;
+%     yIntervalo = raio * sin(intervaloDesenho) + Yno;
+%     plot(xIntervalo, yIntervalo);
+%     hold off
+%     texto=text(Xno+0.1,Yno+0.1,num2str(no));
+%     set(texto,'Color','blue','FontSize',14)
+% end
+% 
+% for i=1:nNos
+%    xi =  coordenadas (i,1);
+%    xd=xi + escala*deslocAtual(2*i-1,1);
+%    coordenadasAux(i,1) = xd;
+%    
+%    yi =  coordenadas (i,2);
+%    yd =yi + escala*deslocAtual(2*i,1);
+%    coordenadasAux(i,2) = yd;
+%    
+%    
+% end
+% 
+% figure(nPlotagens+2);
+% hold on
+% 
+% for el=1:nElem
+%     
+%     no1=elementos(el,1);
+%     no2=elementos(el,2);
+%     Xno1=coordenadasAux(no1,1);
+%     Yno1=coordenadasAux(no1,2);
+%     Xno2=coordenadasAux(no2,1);
+%     Yno2=coordenadasAux(no2,2);
+%     line([Xno1 Xno2],[Yno1 Yno2],'Color','red','LineStyle','--');
+%     
+% end
+% 
+% hold off
+% 
+% figure(nPlotagens+3);
+
+% bar((tensoes')/1E6)
+% title({'Tensões nas barras';'      '});
+% xlabel('Barras')
+% ylabel('Tensões (MPa)')
 
 
 end
