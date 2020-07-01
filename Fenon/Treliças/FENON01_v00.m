@@ -35,8 +35,10 @@
 % nCargNo               - Quantidade de cargas nodais externas
 % nRecalNo              - Quantidade de recalques nodais impostos
 % el                    - Contador interno do elemento analisado de um laço
+% tipoElemento          - Tipo de elemento finito utilizado na análise estrutural                       (Pode ser BAR1D ; TRUSS2D1 ; BEAM2D ; PORTICO2D)
 % nGrauLiberdadePorNo   - Total de graus de liberdade por nó
 % nNosPorElemento       - Total de graus de liberdade por elemento
+% tipoMaterial          - Modelo do comportamento do material                                           (Pode ser NLEP1)
 % tipoDePrescricao      - Tipo de prescrição adotada na análise. Podendo ser DESLOCAMENTO ou FORCA
 % nPassos               - Número passos ou divisões de uma determinada prescrição. Processo incremental
 % tolerancia            - Critério de parada para o processo iterativo
@@ -78,7 +80,7 @@
 %
 % <<<<<>>>>>
 
-function FENON01_v00_trelicas2D(config)
+function FENON01_v00(config)
 %%
 %
 %
@@ -104,8 +106,10 @@ recalqNodais            = config.recalqNodais;
 nRecalNo                = config.nRecalNo;
 nPres                   = config.nPres;
 prescricoes             = config.prescricoes;
+tipoElemento            = config.tipoElemento;
 nGrauLiberdadePorNo     = config.nGrauLiberdadePorNo;
 nNosPorElemento         = config.nNosPorElemento;
+tipoMaterial            = config.tipoMaterial; 
 tipoDePrescricao        = config.tipoDePrescricao;
 nPassos                 = config.nPassos;
 tolerancia              = config.tolerancia;
@@ -136,7 +140,7 @@ end
 %=========================================================================%
 %
 %
-% Etapa 2.1: Determinação dos tipos de graus de liberdade da estrutura
+% Step 2.1: Determinação dos tipos de graus de liberdade da estrutura
 [grauLiberdadeTotal,nGrauLibTotal,grauLiberdadeRestrito,nGrauLibRestrito,grauLiberdadeLivre,nGrauLibLivre]=FENON01_v00_grau_de_liberdade_estrutura(nNos,nGrauLiberdadePorNo,nPres,prescricoes);
 
 % Etapa 2.2: Criação dos vetore de histórico das variáveis
@@ -164,7 +168,12 @@ elseif  strcmp(tipoDePrescricao,'DESLOCAMENTO')
     % Step 3.1.2: Monta o vetor de forças externas para a estrutura de acordo com o passo condicionado
     [recalExterna]  = FENON01_v00_carga_dos_nos(nRecalNo,recalqNodais,nGrauLiberdadePorNo,nNos);
     deltaRecal      = recalExterna/nPassos;
+
+elseif  strcmp(tipoDePrescricao,'ARC1')
     
+% IMPLEMENTAR IMPLEMENTAR
+% IMPLEMENTAR IMPLEMENTAR
+
 end
 
 fprintf('%s\n','Processando a estrutura...');
@@ -180,12 +189,17 @@ fprintf('%s\n','Processando a estrutura...');
 if      strcmp(tipoDePrescricao,'FORCA')
     
     % Step 4.1.1: Monta o vetor deslocamentos nodais para primeira rodada de carregamento para controle de força
-    deslocNovo = zeros(1,nGrauLibTotal);
+    deslocNovo = zeros(nGrauLibTotal,1);
     
 elseif  strcmp(tipoDePrescricao,'DESLOCAMENTO')
     
     % Step 4.1.2: Monta o vetor deslocamentos nodais para primeira rodada de carregamento para controle de deslocamentos
     deslocNovo = deltaRecal;
+    
+elseif  strcmp(tipoDePrescricao,'ARC1')
+    
+    % IMPLEMENTAR IMPLEMENTAR
+    % IMPLEMENTAR IMPLEMENTAR
     
 end
 
@@ -201,13 +215,17 @@ for passoPres=1:nPassos
     % Step 4.2.2.1: Inicializando o vetor de deslocamentos e forças externas do passo atual
     if      strcmp(tipoDePrescricao,'FORCA')
         
-        deslocAtual=deslocNovo';
-        forcaExtAtual = forcaExtAtual + deltaForca;
+        deslocAtual     = deslocNovo;
+        forcaExtAtual   = forcaExtAtual + deltaForca;
         
     elseif  strcmp(tipoDePrescricao,'DESLOCAMENTO')
         
-        deslocAtual=deslocNovo+deltaRecal;
+        deslocAtual     = deslocNovo+deltaRecal;
         
+    elseif  strcmp(tipoDePrescricao,'ARC1')
+        
+    % IMPLEMENTAR IMPLEMENTAR
+    % IMPLEMENTAR IMPLEMENTAR
         
     end
     deslocAtual
@@ -215,7 +233,7 @@ for passoPres=1:nPassos
     
     
     % Step 4.2.2.3: Montagem do vetor de deformações dos elementos
-    [deformacoes]       = FENON01_v00_deformacoes_barras(nElem,deslocAtual,elementos,nGrauLiberdadePorNo,nNosPorElemento,comprimento,cossenoDiretor,senoDiretor);
+    [deformacoes]       = FENON01_v00_deformacoes_barras(nElem,deslocAtual,elementos,nGrauLiberdadePorNo,nNosPorElemento,comprimento,cossenoDiretor,senoDiretor,tipoElemento);
     deformacoes
     
     % Step 4.2.2.4: Atualização do vetor de tensões internas nos elementos e módulo de elasticidade de acordo com a curva de referência do marterial
@@ -248,7 +266,7 @@ for passoPres=1:nPassos
     deslocIncremental = deslocAtual + deltaDesloc
     
     % Step 4.2.2.3: Montagem do vetor de deformações dos elementos
-    [deformacoes]       = FENON01_v00_deformacoes_barras(nElem,deslocIncremental,elementos,nGrauLiberdadePorNo,nNosPorElemento,comprimento,cossenoDiretor,senoDiretor);
+    [deformacoes]       = FENON01_v00_deformacoes_barras(nElem,deslocIncremental,elementos,nGrauLiberdadePorNo,nNosPorElemento,comprimento,cossenoDiretor,senoDiretor,tipoElemento);
     deformacoes
     
     % Step 4.2.2.4: Atualização do vetor de tensões internas nos elementos e módulo de elasticidade de acordo com a curva de referência do marterial
@@ -296,18 +314,18 @@ historicoFint
 %=========================================================================%
 %
 %
-% Step 6.1: Plotagem
+% Step 6.1: Plotagem das trajetórias de equilíbrio por grau de liberdade
 for i=1:nPlotagens
     
     figure(i+1);
     xlabel('deslocamento (m)')
     ylabel('Carga (N)')
-    noAnalisado = nosTrajetoriaEqu(i);
+    grauAnalisado = nosTrajetoriaEqu(i);
     
     hold on
-    title(['Trajetória de Equilíbrio em Y nó ',num2str(noAnalisado)])
-    plotDirecaoX=historicoUnod(2*noAnalisado,:);
-    plotDirecaoY=historicoFext(2*noAnalisado,:);
+    title(['Trajetória de Equilíbrio grau de liberdade ',num2str(grauAnalisado)])
+    plotDirecaoX=historicoUnod(grauAnalisado,:);
+    plotDirecaoY=historicoFint(grauAnalisado,:);
     plot(plotDirecaoX,plotDirecaoY,'b--o');
     
     hold on
@@ -319,17 +337,73 @@ for i=1:nPlotagens
     
 end
 
+% Step 6.2: Plotagem da trajetória de equilíbrio média da estrutura por direção
 
-% Step 6.2: Plota a estrutura deformada
+% Step 6.2.1: Vetor que separa os graus de liberdade da estrutura
+for i=1:nNos
+    graux(i)=2*i-1;
+    grauy(i)=2*i;
+end
 
+% Step 6.2.2: Plotagem da curva média direção x
+figure(nPlotagens+2);
+xlabel('deslocamento (m)')
+ylabel('Carga (N)')
+title('Trajetória de Equilíbrio média estrutura direção X')
+
+for i=1:nPassos
+
+    hold on
+    plotDirecaoX=norm(historicoUnod(:,i));
+    plotDirecaoY=norm(historicoFint(:,i));
+    plot(plotDirecaoX,plotDirecaoY,'b--o');
+    
+    hold on
+    plot(0,0,'-mo',...
+    'LineWidth',2,...
+    'MarkerEdgeColor','k',...
+    'MarkerFaceColor',[.49 1 .63],...
+    'MarkerSize',10);
+    
+end
+
+% Step 6.2.3: Plotagem da curva média direção y
+figure(nPlotagens+3);
+xlabel('deslocamento (m)')
+ylabel('Carga (N)')
+title('Trajetória de Equilíbrio média estrutura direção Y')
+
+for i=1:nPassos
+
+    hold on
+    plotDirecaoX=norm(historicoUnod(:,i));
+    plotDirecaoY=norm(historicoFint(:,i));
+    plot(plotDirecaoX,plotDirecaoY,'b--o');
+    
+    hold on
+    plot(0,0,'-mo',...
+    'LineWidth',2,...
+    'MarkerEdgeColor','k',...
+    'MarkerFaceColor',[.49 1 .63],...
+    'MarkerSize',10);
+    
+end
+
+% Step 6.3: Plotagem da estrutura deformada
+
+% Step 6.3.1: Introdução da escala desejada pelo usuário
 escala=input('Digite a escala a ser utilizada(100):');
 if (isempty(escala)==1)
    escala=100;
 end
 
 fprintf('%s\n','Desenhando a estrutura deformada...');
-figure(nPlotagens+2);
+figure(nPlotagens+4);
+axis equal;
+axis off;
+title({'Estrutura deformada';'      '});
 
+% Step 6.3.2: Desenhando os elementos na posição indeformada
 for el=1:nElem
     
     no1=elementos(el,1);
@@ -341,73 +415,65 @@ for el=1:nElem
     line([Xno1 Xno2],[Yno1 Yno2],'LineWidth',1);
     
 end
-% 
-% axis equal;
-% axis off;
-% title({'Estrutura deformada';'      '});
-% 
-% % Step 1.2: Numeração dos elementos
-% for el=1:nElem
-%     no1=elementos(el,1);
-%     no2=elementos(el,2);
-%     Xno1=coordenadas(no1,1);
-%     Yno1=coordenadas(no1,2);
-%     Xno2=coordenadas(no2,1);
-%     Yno2=coordenadas(no2,2);
-%     texto=text((Xno1+Xno2)/2,(Yno1+Yno2)/2,num2str(el));
-%     set(texto,'Color','black','FontSize',14)
-% end
-% 
-% % Step 1.3: Numeração dos nós
-% for no=1:nNos
-%     Xno=coordenadas(no,1);
-%     Yno=coordenadas(no,2);
-%     hold on
-%     raio=0.1;
-%     intervaloDesenho = 0:pi/50:2*pi;
-%     xIntervalo = raio * cos(intervaloDesenho) + Xno;
-%     yIntervalo = raio * sin(intervaloDesenho) + Yno;
-%     plot(xIntervalo, yIntervalo);
-%     hold off
-%     texto=text(Xno+0.1,Yno+0.1,num2str(no));
-%     set(texto,'Color','blue','FontSize',14)
-% end
-% 
-% for i=1:nNos
-%    xi =  coordenadas (i,1);
-%    xd=xi + escala*deslocAtual(2*i-1,1);
-%    coordenadasAux(i,1) = xd;
-%    
-%    yi =  coordenadas (i,2);
-%    yd =yi + escala*deslocAtual(2*i,1);
-%    coordenadasAux(i,2) = yd;
-%    
-%    
-% end
-% 
-% figure(nPlotagens+2);
-% hold on
-% 
-% for el=1:nElem
-%     
-%     no1=elementos(el,1);
-%     no2=elementos(el,2);
-%     Xno1=coordenadasAux(no1,1);
-%     Yno1=coordenadasAux(no1,2);
-%     Xno2=coordenadasAux(no2,1);
-%     Yno2=coordenadasAux(no2,2);
-%     line([Xno1 Xno2],[Yno1 Yno2],'Color','red','LineStyle','--');
-%     
-% end
-% 
-% hold off
-% 
-% figure(nPlotagens+3);
 
-% bar((tensoes')/1E6)
-% title({'Tensões nas barras';'      '});
-% xlabel('Barras')
-% ylabel('Tensões (MPa)')
+% Step 6.3.3: Numerando os elementos na posição indeformada
+for el=1:nElem
+    no1=elementos(el,1);
+    no2=elementos(el,2);
+    Xno1=coordenadas(no1,1);
+    Yno1=coordenadas(no1,2);
+    Xno2=coordenadas(no2,1);
+    Yno2=coordenadas(no2,2);
+    texto=text((Xno1+Xno2)/2,(Yno1+Yno2)/2,num2str(el));
+    set(texto,'Color','black','FontSize',14)
+end
+
+% Step 6.3.4: Desenhando os nós na posição indeformada
+for no=1:nNos
+    Xno=coordenadas(no,1);
+    Yno=coordenadas(no,2);
+    hold on
+    raio=0.1;
+    intervaloDesenho = 0:pi/50:2*pi;
+    xIntervalo = raio * cos(intervaloDesenho) + Xno;
+    yIntervalo = raio * sin(intervaloDesenho) + Yno;
+    plot(xIntervalo, yIntervalo);
+    hold off
+    texto=text(Xno+0.1,Yno+0.1,num2str(no));
+    set(texto,'Color','blue','FontSize',14)
+end
+
+% Step 6.3.5: Desenhando os nós na posição deformada
+for i=1:nNos
+    
+   xi =  coordenadas (i,1);
+   xd=xi + escala*deslocAtual(2*i-1,1);
+   coordenadasAux(i,1) = xd;
+   
+   yi =  coordenadas (i,2);
+   yd =yi + escala*deslocAtual(2*i,1);
+   coordenadasAux(i,2) = yd;
+   
+   
+end
+
+% Step 6.3.6: Desenhando os elementos na posição deformada
+figure(nPlotagens+4);
+hold on
+for el=1:nElem
+    
+    no1=elementos(el,1);
+    no2=elementos(el,2);
+    Xno1=coordenadasAux(no1,1);
+    Yno1=coordenadasAux(no1,2);
+    Xno2=coordenadasAux(no2,1);
+    Yno2=coordenadasAux(no2,2);
+    line([Xno1 Xno2],[Yno1 Yno2],'Color','red','LineStyle','--');
+    
+end
+
+hold off
+
 
 
 end

@@ -77,7 +77,8 @@ nGrauLibTotal = length(grauLiberdadeTotal);
 %
 %
 %=========================================================================%
-% STEP 2: DETERMINAÇÃO DOS GRAUS DE LIBERDADE RESTRITOS
+% STEP 2: DETERMINAÇÃO DOS GRAUS DE LIBERDADE RESTRITOS EM FUNÇÃO DO TIPO
+%         DA QUANTIDADE DE GRAUS POR NÓR
 %=========================================================================%
 %
 %
@@ -86,35 +87,109 @@ nGrauLibTotal = length(grauLiberdadeTotal);
 % Step 2.1.1: Zerando o contador auxiliar de posições no vetor
 contadorAux = 0;
 
-% Step 2.1.2: Percorrendo os nós prescritos
-for j=1:nPres
+% Step 2.1.2: Percorrendo os nós prescritos em função do tipo de nó
+
+% Step 2.1.2.1: Para situações com um grau de liberdade por nó
+if      nGrauLiberdadePorNo==1
     
-    % Step 2.1.2.1: Nó analisado
-    noAnalisado = precricoes(j,1);
-    
-    % Step 2.1.2.2: Restrição em X
-    restricaoX      = precricoes(j,2);
-    
-    % Step 2.1.2.3: Armazenamento em caso positivo o grau de liberdade da restrição em X
-    if restricaoX ~= 0
+    for j=1:nPres
         
-        % Step 2.1.2.3.1: Contabilizando uma posição no contador em caso positivo
-        contadorAux                          = contadorAux + 1;
-        grauLiberdadeRestrito(contadorAux)   = 2*noAnalisado - 1;
+        % Step 2.1.2.1.1: Nó analisado
+        noAnalisado = precricoes(j,1);
+        
+        % Step 2.1.2.1.2: Restrição em X
+        restricaoX      = precricoes(j,2);
+        
+        % Step 2.1.2.1.3: Armazenamento em caso positivo o grau de liberdade da restrição em X
+        if restricaoX ~= 0
+            
+            % Step 2.1.2.1.3.1: Contabilizando uma posição no contador em caso positivo
+            contadorAux                          = contadorAux + 1;
+            grauLiberdadeRestrito(contadorAux)   = noAnalisado;
+            
+        end
+        
+    end
+    
+% Step 2.1.2.2: Para situações com dois graus de liberdade por nó
+elseif  nGrauLiberdadePorNo==2
+    
+    for j=1:nPres
+        
+        % Step 2.1.2.2.1: Nó analisado
+        noAnalisado = precricoes(j,1);
+        
+        % Step 2.1.2.2.2: Restrição em X
+        restricaoX      = precricoes(j,2);
+        
+        % Step 2.1.2.2.3: Armazenamento em caso positivo o grau de liberdade da restrição em X
+        if restricaoX ~= 0
+            
+            % Step 2.1.2.2.3.1: Contabilizando uma posição no contador em caso positivo
+            contadorAux                          = contadorAux + 1;
+            grauLiberdadeRestrito(contadorAux)   = 2*noAnalisado - 1;
+            
+        end
+        
+        % Step 2.1.2.2.4: Restrição em Y
+        restricaoY      = precricoes(j,3);
+        
+        % Step 2.1.2.2.5: Armazenamento em caso positivo o grau de liberdade da restrição em Y
+        if restricaoY ~= 0
+            
+            % Step 2.1.2.2.5.1: Contabilizando uma posição no contador em caso positivo
+            contadorAux                          = contadorAux + 1;
+            grauLiberdadeRestrito(contadorAux)   = 2*noAnalisado;
+            
+        end
         
     end
     
-    % Step 2.1.2.4: Restrição em Y
-    restricaoY      = precricoes(j,3);
+% Step 2.1.2.3: Para situações com três graus de liberdade por nó
+elseif  nGrauLiberdadePorNo==3
     
-    % Step 2.1.2.5: Armazenamento em caso positivo o grau de liberdade da restrição em Y
-    if restricaoY ~= 0
+    for j=1:nPres
         
-        % Step 2.1.2.5.1: Contabilizando uma posição no contador em caso positivo
-        contadorAux                          = contadorAux + 1;
-        grauLiberdadeRestrito(contadorAux)   = 2*noAnalisado;
+        % Step 2.1.2.3.1: Nó analisado
+        noAnalisado = precricoes(j,1);
         
+        % Step 2.1.2.3.2: Restrição em X
+        restricaoX      = precricoes(j,2);
+        
+        % Step 2.1.2.3.3: Armazenamento em caso positivo o grau de liberdade da restrição em X
+        if restricaoX ~= 0
+            
+            % Step 2.1.2.3.3.1: Contabilizando uma posição no contador em caso positivo
+            contadorAux                          = contadorAux + 1;
+            grauLiberdadeRestrito(contadorAux)   = 3*noAnalisado - 2;
+            
+        end
+        
+        % Step 2.1.2.3.4: Restrição em Y
+        restricaoY      = precricoes(j,3);
+        
+        % Step 2.1.2.3.5: Armazenamento em caso positivo o grau de liberdade da restrição em Y
+        if restricaoY ~= 0
+            
+            % Step 2.1.2.3.5.1: Contabilizando uma posição no contador em caso positivo
+            contadorAux                          = contadorAux + 1;
+            grauLiberdadeRestrito(contadorAux)   = 3*noAnalisado-1;
+            
+        end
+        
+        % Step 2.1.2.3.6: Restrição em TETHA
+        restricaoTetha      = precricoes(j,4);
+        
+        % Step 2.1.2.3.7: Armazenamento em caso positivo o grau de liberdade da restrição em Y
+        if restricaoTetha ~= 0
+            
+            % Step 2.1.2.3.7.1: Contabilizando uma posição no contador em caso positivo
+            contadorAux                          = contadorAux + 1;
+            grauLiberdadeRestrito(contadorAux)   = 3*noAnalisado;
+            
+        end        
     end
+    
     
 end
 

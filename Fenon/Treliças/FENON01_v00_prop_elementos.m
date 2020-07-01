@@ -91,11 +91,4 @@ comprimento=sqrt((xNo1-xNo2)^2+(yNo1-yNo2)^2);
 coss=deltaX/comprimento;
 senn=deltaY/comprimento;
 
-% if deltaX==0
-%    ang=90;
-% else
-%    ang=atan(deltaY/deltaX);
-% end
-
-
 end

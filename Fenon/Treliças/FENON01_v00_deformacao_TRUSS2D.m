@@ -18,7 +18,7 @@
 
 % <<<<<>>>>>            Descrição            <<<<<>>>>> %
 %
-% Determina as deformações nos elementos de uma treliça de duas dimensões
+% Determina a deformação em um elemento de barra do tipo TRUSS2D
 %
 % <<<<<>>>>>                                 <<<<<>>>>> %
 
@@ -26,13 +26,13 @@
 %
 % Escalares:
 % ------------------------------------------------------------------------
-% nElem                 - Quantidade de elementos da estrutura
-% nGrauLiberdadePorNo   - Total de graus de liberdade por nó
-% nNosPorElemento       - Total de graus de liberdade por elemento
 % el                    - Contador interno para cada elemento da estrutura
 % L                     - Comprimento do elemento (el)
 % coss                  - Valor do cosseno diretor para um detemrinado elemento
 % senn                  - Valor do seno diretor para um detemrinado elemento
+% nElem                 - Quantidade de elementos da estrutura
+% nGrauLiberdadePorNo   - Total de graus de liberdade por nó
+% nNosPorElemento       - Total de graus de liberdade por elemento
 % ------------------------------------------------------------------------
 %
 % Vetores
@@ -57,26 +57,41 @@
 % ------------------------------------------------------------------------
 %
 % <<<<<>>>>>
-
-function [deformacoes]=FENON01_v00_deformacoes_barras(nElem,deslocamentoNodais,elementos,nGrauLiberdadePorNo,nNosPorElemento,comprimento,cossenoDiretor,senoDiretor,tipoElemento)
+function [deformacao]=FENON01_v00_deformacao_TRUSS2D(el,elementos,nGrauLiberdadePorNo,nNosPorElemento,deslocamentoNodais,comprimento,cossenoDiretor,senoDiretor,tipoElemento)
 %%
 %
 %
 %=========================================================================%
-% STEP 1: CRIAÇÃO DO VETOR DE DEFORMAÇÕES DA ESTRUTURA
+% STEP 1:   DETERMINAÇÃO DA DEFORMAÇÃO DE UM ELEMENTO DA ESTRUTURA ELEMENTO 
+%           TRUSS2D1
 %=========================================================================%
 %
 %
-% Step 1.1: Inicialização das variáveis do método
-deformacoes=zeros(nElem,1);
+% Step 1.1: Modelo de deformação nos elementos para o EF TRUSS2D1
+if strcmp(tipoElemento,'TRUSS2D1')
+    
+% Step 1.1.1: Inicializando vetor de deslocamentos nodais em um estado local
+deslocLocal                     = zeros(4,1);
 
-% Step 1.2: Laço para determinar o valor das deformações por elemento
-for el=1:nElem
-    
-    
-    [deformacoes(el)]=FENON01_v00_deformacao_TRUSS2D(el,elementos,nGrauLiberdadePorNo,nNosPorElemento,deslocamentoNodais,comprimento,cossenoDiretor,senoDiretor,tipoElemento);
-    
+% Step 1.1.2: Graus locais do elemento TRUSS2D1
+grauElementoLocal               = [1 2 3 4];
+
+% Step 1.1.3: Correspondência do vetor de graus locais no sistema global de referências
+[grauElementoGlobal]            = FENON01_v00_correspondencia_grau_liberdade(el,elementos,nGrauLiberdadePorNo,nNosPorElemento);
+
+% Step 1.1.4: Atribuição da correspondência de grau de liberdade
+deslocLocal(grauElementoLocal)  = deslocamentoNodais(grauElementoGlobal);
+
+% Step 1.1.5: Montagem do vetor B de deformações
+L                               = comprimento(el);
+vetorB                          = [-1/L 0 1/L 0];
+
+% Step 1.1.6: Montagem do vetor de deformações
+coss                            = cossenoDiretor(el);
+senn                            = senoDiretor(el);
+[rotacao]                       = MatrizRotacao(coss,senn);%%%%%%%%%%%%%%
+deformacao                      = vetorB*rotacao*deslocLocal;
+
 end
 
 end
-

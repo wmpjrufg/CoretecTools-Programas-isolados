@@ -35,14 +35,16 @@
 % nCargNo               - Quantidade de cargas nodais externas
 % nRecalNo              - Quantidade de recalques nodais impostos
 % nPres                 - Quantidade de prescrições impostas em nós
-% estruturaDesenho      - String que qualifica se o desenho está correto (Pode ser SIM ou NAO)
+% estruturaDesenho      - String que qualifica se o desenho está correto                                (Pode ser SIM ; NAO)
+% tipoElemento          - Tipo de elemento finito utilizado na análise estrutural                       (Pode ser BAR1D ; TRUSS2D1 ; BEAM2D ; PORTICO2D)
 % nGrauLiberdadePorNo   - Total de graus de liberdade por nó
 % nNosPorElemento       - Total de graus de liberdade por elemento
-% tipoDePrescricao      - Tipo de prescrição adotada na análise. Podendo ser DESLOCAMENTO ou FORCA
-% nPassos               - Número passos ou divisões de uma determinada prescrição. Processo incremental
+% tipoMaterial          - Modelo do comportamento do material                                           (Pode ser NLEP1)
+% tipoDePrescricao      - Tipo de prescrição adotada na análise.                                        (Pode ser DESLOCAMENTO ; FORCA ; ARC1)
+% nPassos               - Número passos ou divisões de uma determinada prescrição.                      Processo incremental
 % tolerancia            - Critério de parada para o processo iterativo
-% nIter               	- Número de iterações para determinação do equilibrio da estrutura Fext=Fint por exemplo
-% nPlotagens 		- Número de plotagem de trajetórias de equilíbrio 
+% nIter               	- Número de iterações para determinação do equilibrio da estrutura Fext=Fint.   Processo iterativo
+% nPlotagens            - Número de plotagem de trajetórias de equilíbrio 
 % ------------------------------------------------------------------------
 %
 % Vetores
@@ -149,14 +151,16 @@ else
     return
 end
 
-% Step 1.16: Configurações gerais para análise estrutural via MEF 
+% Step 1.16: Configurações gerais para análise estrutural via MEF
+config.tipoElemento            = 'TRUSS2D1';
 config.nGrauLiberdadePorNo     = 2;
 config.nNosPorElemento         = 2;
+config.tipoMaterial            = 'NLEP1';  
 config.tipoDePrescricao        = 'FORCA';
 config.nPassos                 = 10;
 config.tolerancia              = 1e-08;
 config.iter                    = 0;
-config.nosTrajetoriaEqu        = [ 2 4 3 ]; 
+config.nosTrajetoriaEqu        = [ 1 2 3 4 5 6 7 8 ]; 
 config.nPlotagens              = numel(config.nosTrajetoriaEqu); 
 %%
 %
@@ -167,4 +171,5 @@ config.nPlotagens              = numel(config.nosTrajetoriaEqu);
 %
 %
 % Step 2.1: Processamento da estrutura
-FENON01_v00_trelicas2D(config);
+FENON01_v00(config);
+
