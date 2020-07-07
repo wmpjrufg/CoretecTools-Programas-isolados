@@ -3,18 +3,14 @@
 // UNIVERSIDADE FEDERAL DE CATALÃO (UFCat)
 // DEPARTAMENTO DE ENGENHARIA CIVIL & DEPARTAMENTO DE CIÊNCIAS DA COMPUTAÇÃO
 // Autores
-// Aleff Lucas Gonçalves Martins
-// Roberto Viegas Dutra
+// Carlos Magno Silva Carneiro
+// Walfrido Carvalho do Valle
 // Colaboradores
-// Luiz Eduardo Costa Mota Leite
-// Newton Peixoto
-// Pedro Henrique dos Santos Marques Vieira
-// Luanna Lopes Lobato
 // Wanderlei Malaquias Pereira Junior
 // ######################################################################
 
 // Nome:    Informa os erros identificados no programa de dimensionamento de seções retangulares submetidas à flexão pura
-// Versão:  FLEXAOPURACONCRETOARMADO01_v00_erros
+// Versão:  FLEXAOPURACONCRETOPROTENDIDO01_v00_erros
 // Notas:
 // 01-01-20 - Prof. W. M. Pereira Junior and L. E. C. Mota Leite introduziram as verificações de erros e avisos
 //
@@ -26,7 +22,7 @@
 
 // ---------- Descrição do programa
 //
-// O programa abaixo verifica erros no programa FLEXAOPURACONCRETOARMADO01_v00_principal
+// O programa abaixo verifica erros no programa FLEXAOPURACONCRETOPROTENDIDO01_v00_principal
 // Para teste utilize: https://repl.it/~
 //
 // ----------
@@ -35,7 +31,7 @@
 //
 // Escalares
 //
-// erro  - Código do erro no programa FLEXAOPURACONCRETOARMADO01_v00_principal
+// erro  - Código do erro no programa FLEXAOPURACONCRETOPROTENDIDO01_v00_principal
 //
 // Vetores:
 //
@@ -50,7 +46,7 @@
 // ----------
 
 
-function FLEXAOPURACONCRETOARMADO01_v00_erros($erro)
+function FLEXAOPURACONCRETOPROTENDIDO01_v00_erros($erro)
 {
 
 //

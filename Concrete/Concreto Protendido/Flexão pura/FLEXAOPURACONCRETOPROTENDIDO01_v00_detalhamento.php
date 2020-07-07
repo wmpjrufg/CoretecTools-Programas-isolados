@@ -3,18 +3,14 @@
 // UNIVERSIDADE FEDERAL DE CATALÃO (UFCat)
 // DEPARTAMENTO DE ENGENHARIA CIVIL & DEPARTAMENTO DE CIÊNCIAS DA COMPUTAÇÃO
 // Autores
-// Aleff Lucas Gonçalves Martins
-// Roberto Viegas Dutra
+// Carlos Magno Silva Carneiro
+// Walfrido Carvalho do Valle
 // Colaboradores
-// Luiz Eduardo Costa Mota Leite
-// Newton Peixoto
-// Pedro Henrique dos Santos Marques Vieira
-// Luanna Lopes Lobato
 // Wanderlei Malaquias Pereira Junior
 // ######################################################################
 
 // Nome:    Informa os possíveis detalhamentos no dimensionamento de seções retangulares à flexão pura
-// Versão:  FLEXAOPURACONCRETOARMADO01_v00_detalhamento
+// Versão:  FLEXAOPURACONCRETOPROTENDIDO01_v00_detalhamento
 // Notas:
 // 01-01-19 - A. L. G. Martins and R. V. Dutra finalizaram a versão beta
 // 01-01-20 - Prof. W. M. Pereira Junior and L. E. C. Mota Leite introduziram as verificações de erros e avisos
@@ -27,7 +23,7 @@
 
 // ---------- Descrição do programa
 //
-// O programa abaixo verifica avisos no programa FLEXAOPURACONCRETOARMADO01_v00_principal
+// O programa abaixo verifica avisos no programa FLEXAOPURACONCRETOPROTENDIDO01_v00_principal
 // Para teste utilize: https://repl.it/~
 //
 // ----------
@@ -72,11 +68,11 @@
 
 // ---------- Chamada de funções
 //
-include_once('FLEXAOPURACONCRETOARMADO01_v00_avisos.php');
+include_once('FLEXAOPURACONCRETOPROTENDIDO01_v00_avisos.php');
 //
 // ----------
 
-function FLEXAOPURACONCRETOARMADO01_v00_detalhamento($dmax, $as, $h, $d, $bw, $cob, $phiestribo)
+function FLEXAOPURACONCRETOPROTENDIDO01_v00_detalhamento($dmax, $as, $h, $d, $bw, $cob, $phiestribo)
 {
 
 //
@@ -247,7 +243,7 @@ function FLEXAOPURACONCRETOARMADO01_v00_detalhamento($dmax, $as, $h, $d, $bw, $c
 
             if ($dreal <= 0) {
                 $aviso=5;
-                FLEXAOPURACONCRETOARMADO01_v00_avisos($aviso);
+                FLEXAOPURACONCRETOPROTENDIDO01_v00_avisos($aviso);
             }
 
             $ateste      = $ycgarmadura - $y1;
@@ -265,12 +261,12 @@ function FLEXAOPURACONCRETOARMADO01_v00_detalhamento($dmax, $as, $h, $d, $bw, $c
             } else {
                 if ($dreal < $d) {
                     $aviso=3;
-                    FLEXAOPURACONCRETOARMADO01_v00_avisos($aviso);
+                    FLEXAOPURACONCRETOPROTENDIDO01_v00_avisos($aviso);
                 }
 
                 if ($ateste > 0.1*$h) {
                     $aviso=4;
-                    FLEXAOPURACONCRETOARMADO01_v00_avisos($aviso);
+                    FLEXAOPURACONCRETOPROTENDIDO01_v00_avisos($aviso);
                 }
       
                 echo "\n";
