@@ -44,6 +44,9 @@
 // md            - Momento fletor de cálculo                                 (kN.m)
 // fcd           - Resistência de cálculo à compressão do concreto           (MPa)
 // fyd           - Resistência de cálculo à tração do aço                    (MPa)
+// fpd           - Tensão mínima de ruptura                                  (MPa)
+// fpyd          - Tensão mínima a 1% de deformação                          (MPa)
+// sigmapdinf    - Tensão de protenção                                       (MPa)
 // dlinha        - Altura útil complementar da peça                          (cm)
 // ac            - Área da seção transversal                                 (cm2)
 // inercia       - Momento de inércia                                        (cm4)
@@ -52,6 +55,10 @@
 // lambda        - Redutor da altura y do diagrama de tensões do concreto
 // alfac         - Redutor da tensão (sigma_cd) do diagrama de tensões do concreto
 // epsiloncu     - Deformação máximo suportada pelo concreto na compressão
+// epsilons      - Alongamento do aço no ELU
+// epsilonalong  - Alongamento do aço na protenção
+// epsilonu      - Alongamento sobre carga
+// epsilonts     - Alongamento total
 // duct          - Coeficiente de ductilidade NBR 6118 (item 14.6.4.3)
 // kmd           - Momento de cálculo (md) admensional
 // kx            - Linha neutra (x) admensional
@@ -116,19 +123,20 @@ echo "CONCRETO PROTENDIDO - DIMENSIONAMENTO DE SEÇÃO RETANGULARES SOB AÇÃO D
 echo "-----------------------------------------------\n\n";
 
 // Step 1.1: Parâmetros de entrada do algoritmo
-$fck        = 20;
+$fck        = 50;
 $dmax       = 1.9;
-$fpyk       = 1680;
-$fptk       = 1900;
-$bw         = 25;
-$h          = 90;
-$cob        = 3.0;
+$fpyk       = 1691.89;
+$fptk       = 1897.7;
+$bw         = 120;
+$h          = 20;
+$cob        = 5.0;
 $phiestribo = 6.3;
 $d          = 80;
-$md         = 600;
+$md         = 148.71;
 $epsilonu   = 0.035;
-$Ep         = 110000;
-$sigmapdinf = 1000;
+$Ep         = 202000;
+$sigmapdinf = 1150.5;
+$fpd        = 1500;
 
 // Step 1.2: Verificação de erros na fase de dados de entrada
 if ($fck > 90) {
@@ -190,14 +198,14 @@ if ($sigmapdinf>$fpyd {
 echo "-----------------------------------------------\n";
 echo "PARÂMETROS DE ENTRADA:\n";
 echo "-----------------------------------------------\n";
-echo "fck = $fck MPa\n";
-echo "DMC = $dmax cm\n";
+echo "fck  = $fck MPa\n";
+echo "DMC  = $dmax cm\n";
 echo "fpyk = $fpyk MPa\n";
-echo "bw  = $bw cm\n";
-echo "h   = $h cm\n";
-echo "cob = $cob cm\n";
-echo "d   = $d cm\n";
-echo "Φe  = $phiestribo mm\n";
+echo "bw   = $bw cm\n";
+echo "h    = $h cm\n";
+echo "cob  = $cob cm\n";
+echo "d    = $d cm\n";
+echo "Φe   = $phiestribo mm\n";
 echo "Momento (Md)  = $md kN.m\n";
 echo "-----------------------------------------------\n\n";
 //
@@ -209,7 +217,7 @@ echo "-----------------------------------------------\n\n";
 //
 // Step 2.1: Determinação da resistência de cálculo para o concreto e aço
 $fcd  = $fck / 1.4;
-
+$fpyd = $fpyk / 1.15;
 // Step 2.2: Determinação altura dlinha
 $dlinha = $h - $d;
 
@@ -280,29 +288,9 @@ if (is_nan($kx)) {
 }
 
 
-
-
 $kz   = (1-0.5*$lambda*$kx);
 $xx   = ($d-sqrt($num2-$num1))/$lambda;
 $x    = $kx * $d;
-
-// Alongamento do aço no ELU                                // epsilons     - Alongamento do aço no ELU
-$epsilons = ($epsiloncu * $d / $x) - $epsiloncu;
-//
-// Alongamento do aço na protenção                          // epsilonalong - Alongamento do aço na protenção
-$epsilonalong = $sigmapdinf / $Ep;                             // sigmapdinf   - Tensão de protenção no tempo infinito (Mpa)
-//                                                          // Ep           - Módulo de elasticidade do aço (MPa)
-// Alongamento total
-$epsilonts = $epsilons + $episilonalong;                    // epsilonts    - Alongamento total
-//
-// Tensão para alongamento quando sigampd maior que fpyd
-$sigmapd = $fpyd + (($fpd - $fpyd)/($epsilonu - $epsilons)) * ($epsilonts - $epsilons);
-
-//                                                           // fpd      - Tensão mínima de ruptura
-//                                                           // fpyd     - Tensão mínima a 1% de deformação 
-//                                                           // epsilonu - alongamento sobre carga 
-
-
 
 // Step 3.2: Checando o domínio da peça
 // Step 3.2.2: Determinação do limite entre domínio 2 e 3
@@ -313,21 +301,45 @@ $lnlim23 = $lim23*$d;
 $lim34   = $epsiloncu / ($epsiloncu + $epsilonu);
 $lnlim34 = $lim34*$d;
 
-//  Step 3.2.4: Escolhendo o modelo de dimensionamento (pode ser armadura simples ou dupla)
+// Step 3.2.4: Escolhendo o modelo de dimensionamento (pode ser armadura simples ou dupla)
 $dominio  = "";
 $armadura = "";
 
 if ($kx < $lim23) {
     $dominio  = "Domínio 2";
     $armadura = "SIMPLES";
+    $epsilons = 0.1;
 } elseif ($kx >= $lim23 && $kx <= $duct) {
     $dominio  = "Domínio 3";
     $armadura = "SIMPLES";
+    $epsilons = ($epsiloncu * $d / $x) - $epsiloncu;
 } elseif ($kx > $duct) {
     $dominio  = "Domínio 3";
     $armadura = "DUPLA";
+    $epsilons = ($epsiloncu * $d / $x) - $epsiloncu;
     $aviso = 1;
     FLEXAOPURACONCRETOPROTENDIDO01_v00_avisos($aviso);
+}
+
+// Step 3.3: Determinação dos alongamentos
+// Step 3.3.1: Alongamento do aço no ELU                                
+$epsilons = ($epsiloncu * $d / $x) - $epsiloncu;
+
+// Step 3.3.2: Alongamento do aço na protenção                         
+if ($sigmapdinf <= $fpyk) {
+    $epsilonalong = $sigmapdinf / $Ep;
+} elseif ($sigmapdinf > $fpyk) {
+    $epsilonalong = ($sigmapdinf-$fpyd)/(($fpd - $fpyd)/($epsilonu - $epsilons));
+}
+
+// Step 3.3.3: Alongamento total
+$epsilonts = $epsilons + $epsilonalong;                    
+
+// Step 3.3.4: Tensão de protenção
+if ($epsilonalong < ($fpyd/$Ep) {
+	$sigmapd = $Ep * $epsilonalong
+} elseif ($epsilonalong >= ($fpyd/$Ep) {
+	$sigmapd = $fpyd + (($fpd - $fpyd)/($epsilonu - $epsilons)) * ($epsilonts - $epsilons);
 }
 
 echo "-----------------------------------------------\n";
