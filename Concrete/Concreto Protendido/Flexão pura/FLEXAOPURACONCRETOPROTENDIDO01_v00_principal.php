@@ -335,9 +335,9 @@ if ($sigmapdinf <= $fpyk) {
 // Step 3.3.3: Alongamento total
 $epsilonts = $epsilons + $epsilonalong;                    
 
-// Step 3.3.4: Tensão de protenção
+// Step 3.3.4: Tensão do aço
 if ($epsilonalong < ($fpyd/$Ep) {
-	$sigmapd = $Ep * $epsilonalong
+	$sigmapd = $Ep * $epsilonts
 } elseif ($epsilonalong >= ($fpyd/$Ep) {
 	$sigmapd = $fpyd + (($fpd - $fpyd)/($epsilonu - $epsilons)) * ($epsilonts - $epsilons);
 }
