@@ -1,16 +1,15 @@
 <?php
 // ######################################################################
-// UNIVERSIDADE FEDERAL DE CATALÃO (UFCat)
-// DEPARTAEMNTO DE ENGENHARIA CIVIL
+// UNIVERSIDADE FEDERAL DE CATALÃO (UFCAT)
+// DEPARTAMENTO DE ENGENHARIA CIVIL
 // Autores
 // Carlos Magno Silva Carneiro
 // Walfrido Carvalho do Valle
-// Colaboradores
 // Wanderlei Malaquias Pereira Junior
 // ######################################################################
 
 // Nome:    Determinação da perda de tensão por atrito na protensão
-// Versão: PROTENSAO02_v00_perda_de_protensao_por_atrito_nos_cabos
+// Versão: 	PROTENSAO02_v00_perda_de_protensao_por_atrito_nos_cabos
 // Notas:
 // 15-04-20 - C. M. S. Carneiro and W. C. do Valle finalizaram a versão beta
 //
