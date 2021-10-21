@@ -5,8 +5,8 @@
 // Autores
 // Carlos Magno Silva Carneiro
 // Walfrido Carvalho do Valle
-// Wanderlei Malaquias Pereira Junior
 // Walter Albergaria
+// Prof. Wanderlei Malaquias Pereira Junior
 // ######################################################################
 
 // ----------------------------
@@ -23,7 +23,7 @@
 
 // ---------- Descrição do programa:
 //
-// O programa abaidistancia_xo determina a perda de tensão devido ao atrito nos cabos
+// O programa determina a perda de protensão devido ao atrito nos cabos
 //
 // ----------
 
